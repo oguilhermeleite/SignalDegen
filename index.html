@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SignalDegen - Sinais inteligentes de criptomoedas para traders ousados">
+    <title>SignalDegen 🚀 - Sinais Inteligentes de Cripto</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📡</span>
+                    <span class="logo-text">SignalDegen</span>
+                </div>
+
+                <nav class="nav" id="nav">
+                    <a href="#home" class="nav-link" data-i18n="nav.home">Home</a>
+                    <a href="#safe-signals" class="nav-link" data-i18n="nav.safe">Safe Signals</a>
+                    <a href="#degen-zone" class="nav-link" data-i18n="nav.degen">Degen Zone</a>
+                    <a href="#backtesting" class="nav-link" data-i18n="nav.backtesting">Backtesting</a>
+                    <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
+                </nav>
+
+                <div class="header-right">
+                    <div class="language-switcher">
+                        <button class="flag-btn active" data-lang="pt" aria-label="Português">🇧🇷</button>
+                        <button class="flag-btn" data-lang="en" aria-label="English">🇺🇸</button>
+                    </div>
+                    <button class="hamburger" id="hamburger" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">SignalDegen 🚀</h1>
+                <p class="hero-subtitle" data-i18n="hero.subtitle">Sinais Inteligentes pra Quem Não Tem Medo</p>
+                <p class="hero-description" data-i18n="hero.description">Advanced technical analysis + High-risk opportunities in real-time</p>
+
+                <div class="hero-buttons">
+                    <a href="#safe-signals" class="btn btn-primary" data-i18n="hero.btn_signals">View Signals Now</a>
+                    <a href="#about" class="btn btn-outline" data-i18n="hero.btn_learn">Learn More</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">📊</span>
+                        <span class="stat-text" data-i18n="hero.stat1">500+ Signals/Day</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🎯</span>
+                        <span class="stat-text" data-i18n="hero.stat2">78% Win Rate</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-icon">⚡</span>
+                        <span class="stat-text" data-i18n="hero.stat3">Real-Time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safe Signals Section -->
+    <section class="safe-signals" id="safe-signals">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🟢</span>
+                    <span data-i18n="safe.title">SAFE SIGNALS - Signals Based on Solid Technical Analysis</span>
+                </h2>
+            </div>
+
+            <div class="signals-grid">
+                <!-- Signal Card 1 -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3 class="pair">BTC/USDT</h3>
+                        <div class="score-badge pulse">
+                            <span class="score-label" data-i18n="common.score">Score</span>
+                            <span class="score-value">85</span>
+                        </div>
+                    </div>
+                    <div class="signal-type strong-buy" data-i18n="signals.strong_buy">STRONG BUY</div>
+                    <div class="price-info">
+                        <span class="price mono">$43,250</span>
+                        <span class="change positive mono">+3.5%</span>
+                    </div>
+                    <div class="indicators">
+                        <div class="indicator">
+                            <span class="indicator-label">RSI:</span>
+                            <span class="indicator-value mono">65</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label">MACD:</span>
+                            <span class="indicator-value" data-i18n="indicators.bullish">Bullish</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
+                            <span class="indicator-value mono">+125%</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="timeframe">1h</span>
+                        <span class="updated" data-i18n="common.updated">Updated 2min ago</span>
+                    </div>
+                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
+                </div>
+
+                <!-- Signal Card 2 -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3 class="pair">ETH/USDT</h3>
+                        <div class="score-badge pulse">
+                            <span class="score-label" data-i18n="common.score">Score</span>
+                            <span class="score-value">72</span>
+                        </div>
+                    </div>
+                    <div class="signal-type buy" data-i18n="signals.buy">BUY</div>
+                    <div class="price-info">
+                        <span class="price mono">$2,340</span>
+                        <span class="change positive mono">+2.1%</span>
+                    </div>
+                    <div class="indicators">
+                        <div class="indicator">
+                            <span class="indicator-label">RSI:</span>
+                            <span class="indicator-value mono">58</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label">EMA:</span>
+                            <span class="indicator-value" data-i18n="indicators.golden_cross">Golden Cross</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
+                            <span class="indicator-value mono">+85%</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="timeframe">4h</span>
+                        <span class="updated" data-i18n="common.updated">Updated 5min ago</span>
+                    </div>
+                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
+                </div>
+
+                <!-- Signal Card 3 -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3 class="pair">SOL/USDT</h3>
+                        <div class="score-badge pulse">
+                            <span class="score-label" data-i18n="common.score">Score</span>
+                            <span class="score-value">55</span>
+                        </div>
+                    </div>
+                    <div class="signal-type hold" data-i18n="signals.hold">HOLD</div>
+                    <div class="price-info">
+                        <span class="price mono">$98.50</span>
+                        <span class="change negative mono">-0.5%</span>
+                    </div>
+                    <div class="indicators">
+                        <div class="indicator">
+                            <span class="indicator-label">RSI:</span>
+                            <span class="indicator-value mono">50</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label">MACD:</span>
+                            <span class="indicator-value" data-i18n="indicators.flat">Flat</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
+                            <span class="indicator-value" data-i18n="indicators.normal">Normal</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="timeframe">1h</span>
+                        <span class="updated" data-i18n="common.updated">Updated 1min ago</span>
+                    </div>
+                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
+                </div>
+
+                <!-- Signal Card 4 -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3 class="pair">BNB/USDT</h3>
+                        <div class="score-badge pulse">
+                            <span class="score-label" data-i18n="common.score">Score</span>
+                            <span class="score-value">88</span>
+                        </div>
+                    </div>
+                    <div class="signal-type strong-buy" data-i18n="signals.strong_buy">STRONG BUY</div>
+                    <div class="price-info">
+                        <span class="price mono">$315.80</span>
+                        <span class="change positive mono">+5.2%</span>
+                    </div>
+                    <div class="indicators">
+                        <div class="indicator">
+                            <span class="indicator-label">RSI:</span>
+                            <span class="indicator-value mono">70</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label">MACD:</span>
+                            <span class="indicator-value" data-i18n="indicators.strong_bullish">Strong Bullish</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
+                            <span class="indicator-value mono">+200%</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="timeframe">15m</span>
+                        <span class="updated" data-i18n="common.updated">Updated 30s ago</span>
+                    </div>
+                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
+                </div>
+
+                <!-- Signal Card 5 -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3 class="pair">XRP/USDT</h3>
+                        <div class="score-badge pulse">
+                            <span class="score-label" data-i18n="common.score">Score</span>
+                            <span class="score-value">35</span>
+                        </div>
+                    </div>
+                    <div class="signal-type sell" data-i18n="signals.sell">SELL</div>
+                    <div class="price-info">
+                        <span class="price mono">$0.52</span>
+                        <span class="change negative mono">-4.8%</span>
+                    </div>
+                    <div class="indicators">
+                        <div class="indicator">
+                            <span class="indicator-label">RSI:</span>
+                            <span class="indicator-value mono">32</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label">MACD:</span>
+                            <span class="indicator-value" data-i18n="indicators.bearish">Bearish</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
+                            <span class="indicator-value mono">+150%</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="timeframe">1h</span>
+                        <span class="updated" data-i18n="common.updated">Updated 3min ago</span>
+                    </div>
+                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
+                </div>
+
+                <!-- Signal Card 6 -->
+                <div class="signal-card">
+                    <div class="card-header">
+                        <h3 class="pair">ADA/USDT</h3>
+                        <div class="score-badge pulse">
+                            <span class="score-label" data-i18n="common.score">Score</span>
+                            <span class="score-value">68</span>
+                        </div>
+                    </div>
+                    <div class="signal-type buy" data-i18n="signals.buy">BUY</div>
+                    <div class="price-info">
+                        <span class="price mono">$0.48</span>
+                        <span class="change positive mono">+1.8%</span>
+                    </div>
+                    <div class="indicators">
+                        <div class="indicator">
+                            <span class="indicator-label">RSI:</span>
+                            <span class="indicator-value mono">62</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label">BB:</span>
+                            <span class="indicator-value" data-i18n="indicators.bollinger">Bollinger</span>
+                        </div>
+                        <div class="indicator">
+                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
+                            <span class="indicator-value mono">+95%</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="timeframe">4h</span>
+                        <span class="updated" data-i18n="common.updated">Updated 7min ago</span>
+                    </div>
+                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Degen Zone Section -->
+    <section class="degen-zone" id="degen-zone">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🔥</span>
+                    <span data-i18n="degen.title">DEGEN ZONE - High-Risk Opportunities</span>
+                </h2>
+                <div class="warning-banner">
+                    <span class="warning-icon">⚠️</span>
+                    <span data-i18n="degen.warning">EXTREME RISK - Only invest what you can afford to lose</span>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="new-listings" data-i18n="degen.tab_new">New Listings</button>
+                <button class="tab-btn" data-tab="memecoins" data-i18n="degen.tab_meme">Memecoins</button>
+                <button class="tab-btn" data-tab="whale-alerts" data-i18n="degen.tab_whale">Whale Alerts</button>
+                <button class="tab-btn" data-tab="arbitrage" data-i18n="degen.tab_arb">Arbitrage</button>
+            </div>
+
+            <div class="tab-content active" id="new-listings">
+                <div class="degen-grid">
+                    <!-- Degen Card 1 -->
+                    <div class="degen-card">
+                        <div class="degen-header">
+                            <span class="degen-tag" data-i18n="degen.new_listing">NEW LISTING</span>
+                            <span class="degen-icon">🚀</span>
+                        </div>
+                        <h3 class="degen-pair">PEPE2.0/USDT</h3>
+                        <div class="degen-info">
+                            <p class="degen-detail">
+                                <span data-i18n="degen.listed">Listed</span> 2h <span data-i18n="degen.on">on</span> Gate.io
+                            </p>
+                            <div class="price-movement">
+                                <span class="price-before mono">$0.00001</span>
+                                <span class="arrow">→</span>
+                                <span class="price-after mono">$0.000025</span>
+                                <span class="change-extreme positive mono">(+150%)</span>
+                            </div>
+                        </div>
+                        <div class="degen-metrics">
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.liquidity">Liquidity:</span>
+                                <span class="metric-value mono">$50K</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.holders">Holders:</span>
+                                <span class="metric-value mono">250</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.contract">Contract:</span>
+                                <span class="metric-value verified" data-i18n="degen.verified">Verified</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.honeypot">Honeypot:</span>
+                                <span class="metric-value unknown" data-i18n="degen.unknown">Unknown</span>
+                            </div>
+                        </div>
+                        <div class="risk-badge extreme" data-i18n="degen.risk_extreme">Risk: EXTREME</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="memecoins">
+                <div class="degen-grid">
+                    <!-- Degen Card 2 -->
+                    <div class="degen-card">
+                        <div class="degen-header">
+                            <span class="degen-tag" data-i18n="degen.memecoin">MEMECOIN</span>
+                            <span class="degen-icon">🐕</span>
+                        </div>
+                        <h3 class="degen-pair">DOGE2.0/USDT</h3>
+                        <div class="degen-info">
+                            <div class="price-info">
+                                <span class="price mono">$0.0000085</span>
+                                <span class="change positive mono">+42.3%</span>
+                            </div>
+                        </div>
+                        <div class="degen-metrics">
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.mcap">Market Cap:</span>
+                                <span class="metric-value mono">$5M</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.holders">Holders:</span>
+                                <span class="metric-value mono">1,250</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.social">Social Buzz:</span>
+                                <span class="metric-value high">HIGH</span>
+                            </div>
+                        </div>
+                        <div class="risk-badge very-high" data-i18n="degen.risk_very_high">Risk: VERY HIGH</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="whale-alerts">
+                <div class="degen-grid">
+                    <!-- Degen Card 3 -->
+                    <div class="degen-card">
+                        <div class="degen-header">
+                            <span class="degen-tag" data-i18n="degen.whale">WHALE ALERT</span>
+                            <span class="degen-icon">🐋</span>
+                        </div>
+                        <h3 class="degen-pair">BTC</h3>
+                        <div class="degen-info">
+                            <p class="whale-movement">
+                                <span class="amount mono">500 BTC</span>
+                                <span class="arrow">→</span>
+                                <span class="exchange">Binance</span>
+                            </p>
+                            <p class="time-ago">15min <span data-i18n="common.ago">ago</span></p>
+                        </div>
+                        <div class="degen-metrics">
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.value">Value:</span>
+                                <span class="metric-value mono">~$21.6M</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.impact">Impact:</span>
+                                <span class="metric-value" data-i18n="degen.potential_selloff">Potential sell-off</span>
+                            </div>
+                        </div>
+                        <div class="risk-badge medium" data-i18n="degen.risk_medium">Risk: MEDIUM</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="arbitrage">
+                <div class="degen-grid">
+                    <!-- Degen Card 4 -->
+                    <div class="degen-card">
+                        <div class="degen-header">
+                            <span class="degen-tag" data-i18n="degen.arbitrage">ARBITRAGE</span>
+                            <span class="degen-icon">⚡</span>
+                        </div>
+                        <h3 class="degen-pair">BTC/USDT</h3>
+                        <div class="degen-info">
+                            <div class="arb-comparison">
+                                <div class="arb-item">
+                                    <span class="exchange-name">Binance</span>
+                                    <span class="price mono">$43,250</span>
+                                </div>
+                                <span class="vs">vs</span>
+                                <div class="arb-item">
+                                    <span class="exchange-name">Coinbase</span>
+                                    <span class="price mono">$43,450</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="degen-metrics">
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.gap">Gap:</span>
+                                <span class="metric-value mono">$200 (0.46%)</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label" data-i18n="degen.profit">Est. Profit:</span>
+                                <span class="metric-value positive mono">~$150</span>
+                            </div>
+                        </div>
+                        <div class="risk-badge low" data-i18n="degen.risk_low">Risk: LOW</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Backtesting Section -->
+    <section class="backtesting" id="backtesting">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">📈</span>
+                    <span data-i18n="backtest.title">Backtesting Simulator</span>
+                </h2>
+                <p class="section-subtitle" data-i18n="backtest.subtitle">Test strategies with historical data</p>
+            </div>
+
+            <div class="backtest-container">
+                <div class="backtest-form">
+                    <h3 data-i18n="backtest.filters">Filters</h3>
+
+                    <div class="form-group">
+                        <label data-i18n="backtest.pair">Trading Pair</label>
+                        <select class="form-control">
+                            <option>BTC/USDT</option>
+                            <option>ETH/USDT</option>
+                            <option>BNB/USDT</option>
+                            <option>SOL/USDT</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="backtest.period">Period</label>
+                        <select class="form-control">
+                            <option data-i18n="backtest.period_30d">Last 30 days</option>
+                            <option data-i18n="backtest.period_90d">Last 90 days</option>
+                            <option data-i18n="backtest.period_180d">Last 180 days</option>
+                            <option data-i18n="backtest.period_1y">Last 1 year</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="backtest.capital">Initial Capital</label>
+                        <input type="number" class="form-control" value="1000" min="100" step="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="backtest.strategy">Strategy</label>
+                        <select class="form-control">
+                            <option data-i18n="backtest.strategy_safe">Safe Signals Only</option>
+                            <option data-i18n="backtest.strategy_mixed">Mixed (Safe + Degen)</option>
+                            <option data-i18n="backtest.strategy_aggressive">Aggressive (Degen Only)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary full-width" data-i18n="backtest.simulate">Simulate</button>
+                </div>
+
+                <div class="backtest-results">
+                    <h3 data-i18n="backtest.results">Results</h3>
+
+                    <div class="results-summary">
+                        <div class="result-row">
+                            <span class="result-label" data-i18n="backtest.initial">Initial Capital:</span>
+                            <span class="result-value mono">$1,000</span>
+                        </div>
+                        <div class="result-row highlight">
+                            <span class="result-label" data-i18n="backtest.final">Final Capital:</span>
+                            <span class="result-value mono positive">$1,847</span>
+                        </div>
+                        <div class="result-row highlight">
+                            <span class="result-label" data-i18n="backtest.profit">Profit:</span>
+                            <span class="result-value mono positive">+$847 (+84.7%)</span>
+                        </div>
+                    </div>
+
+                    <div class="results-stats">
+                        <div class="stat-box">
+                            <div class="stat-number mono">45</div>
+                            <div class="stat-label" data-i18n="backtest.total_trades">Total Trades</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number mono positive">35</div>
+                            <div class="stat-label" data-i18n="backtest.wins">Wins (77.8%)</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number mono">+$250</div>
+                            <div class="stat-label" data-i18n="backtest.best">Best Trade</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number mono negative">-$85</div>
+                            <div class="stat-label" data-i18n="backtest.worst">Worst Trade</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-placeholder">
+                        <canvas id="backtest-chart"></canvas>
+                        <div class="chart-overlay">
+                            <span class="chart-icon">📊</span>
+                            <span data-i18n="backtest.chart_placeholder">Performance Chart</span>
+                        </div>
+                    </div>
+
+                    <div class="disclaimer-small" data-i18n="backtest.disclaimer">
+                        Past performance does not guarantee future results
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="features.title">Why SignalDegen?</h2>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title" data-i18n="features.realtime">Real-Time</h3>
+                    <p class="feature-description" data-i18n="features.realtime_desc">
+                        Instant signals updated every second
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title" data-i18n="features.winrate">78% Win Rate</h3>
+                    <p class="feature-description" data-i18n="features.winrate_desc">
+                        Proven accuracy with historical data
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3 class="feature-title" data-i18n="features.alerts">Push Alerts</h3>
+                    <p class="feature-description" data-i18n="features.alerts_desc">
+                        Get notified instantly on opportunities
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title" data-i18n="features.backtesting">Backtesting</h3>
+                    <p class="feature-description" data-i18n="features.backtesting_desc">
+                        Test strategies before investing
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="feature-title" data-i18n="features.multiexchange">Multi-Exchange</h3>
+                    <p class="feature-description" data-i18n="features.multiexchange_desc">
+                        Signals from all major exchanges
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3 class="feature-title" data-i18n="features.free">100% Free</h3>
+                    <p class="feature-description" data-i18n="features.free_desc">
+                        No hidden fees, completely free
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Disclaimer Section -->
+    <section class="disclaimer-section">
+        <div class="container">
+            <div class="disclaimer-box">
+                <div class="disclaimer-icon">⚠️</div>
+                <h3 class="disclaimer-title" data-i18n="disclaimer.title">WARNING</h3>
+                <p class="disclaimer-text" data-i18n="disclaimer.text">
+                    SignalDegen provides educational signals. We are NOT financial advisors.
+                    Trading involves significant risk. Never invest more than you can afford to lose.
+                    DYOR (Do Your Own Research). We are not responsible for losses.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-icon">📡</span>
+                        <span class="logo-text">SignalDegen</span>
+                    </div>
+                    <p class="footer-description" data-i18n="footer.description">
+                        Smart crypto signals for bold traders. Real-time analysis and high-risk opportunities.
+                    </p>
+                    <p class="footer-copyright">© 2025 SignalDegen. <span data-i18n="footer.rights">All rights reserved.</span></p>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-heading" data-i18n="footer.navigation">Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home" data-i18n="nav.home">Home</a></li>
+                        <li><a href="#safe-signals" data-i18n="nav.safe">Safe Signals</a></li>
+                        <li><a href="#degen-zone" data-i18n="nav.degen">Degen Zone</a></li>
+                        <li><a href="#backtesting" data-i18n="nav.backtesting">Backtesting</a></li>
+                        <li><a href="#about" data-i18n="nav.about">About</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-heading" data-i18n="footer.legal">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+                        <li><a href="#" data-i18n="footer.disclaimer">Disclaimer</a></li>
+                        <li><a href="#" data-i18n="footer.risk">Risk Warning</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-heading" data-i18n="footer.social">Social</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" target="_blank">Twitter</a></li>
+                        <li><a href="#" target="_blank">Telegram</a></li>
+                        <li><a href="#" target="_blank">Discord</a></li>
+                        <li><a href="#" target="_blank">Email</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
