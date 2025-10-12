@@ -316,6 +316,27 @@ async function updateSignalCards() {
         // Update last updated indicator
         updateLiveIndicator(true);
 
+        // Check for notification alerts (if notification manager is loaded)
+        if (window.NotificationManager) {
+            const signals = [];
+            cards.forEach(card => {
+                const pairElement = card.querySelector('.pair');
+                const scoreElement = card.querySelector('.score-value');
+                const signalTypeElement = card.querySelector('.signal-type');
+
+                if (pairElement && scoreElement && signalTypeElement) {
+                    signals.push({
+                        pair: pairElement.textContent.trim(),
+                        score: parseInt(scoreElement.textContent),
+                        type: signalTypeElement.className.replace('signal-type ', '').trim()
+                    });
+                }
+            });
+
+            window.NotificationManager.checkStrongBuyAlerts(signals);
+            window.NotificationManager.checkPriceAlerts(pricesData);
+        }
+
     } catch (error) {
         console.error('Failed to update signal cards:', error);
         updateLiveIndicator(false, error.message);
@@ -793,6 +814,15 @@ async function updateDegenZone(tabType = 'gainers') {
 
         // Update timestamp
         updateDegenTimestamp(tabType);
+
+        // Check for notification alerts (if notification manager is loaded)
+        if (window.NotificationManager) {
+            if (tabType === 'gainers') {
+                window.NotificationManager.checkTopGainersAlerts(coins);
+            } else if (tabType === 'losers') {
+                window.NotificationManager.checkTopLosersAlerts(coins);
+            }
+        }
 
     } catch (error) {
         console.error(`Failed to update ${tabType}:`, error);
