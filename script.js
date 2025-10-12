@@ -484,29 +484,10 @@ function setupScrollAnimations() {
 }
 
 // ===========================
-// Mock Real-Time Updates (Demo)
+// Real-Time Updates (Connected to API)
 // ===========================
-function simulateRealTimeUpdates() {
-    // This is a demo function to simulate price updates
-    // In production, this would connect to a WebSocket or poll an API
-
-    setInterval(() => {
-        const prices = document.querySelectorAll('.price');
-        const changes = document.querySelectorAll('.change');
-
-        // Randomly update a few prices (just for demo effect)
-        if (Math.random() > 0.7) {
-            const randomIndex = Math.floor(Math.random() * prices.length);
-            if (prices[randomIndex]) {
-                // Add a subtle pulse effect to show update
-                prices[randomIndex].style.animation = 'pulse 0.5s ease';
-                setTimeout(() => {
-                    prices[randomIndex].style.animation = '';
-                }, 500);
-            }
-        }
-    }, 5000); // Update every 5 seconds
-}
+// Note: Real-time updates are now handled by js/api.js
+// This function is kept for backwards compatibility but is no longer active
 
 // ===========================
 // View Analysis Button Handlers
@@ -634,8 +615,7 @@ function init() {
         initializeChart();
     }, 500);
 
-    // Start real-time updates simulation (optional)
-    // simulateRealTimeUpdates();
+    // Real-time updates are now handled by js/api.js automatically
 }
 
 // ===========================
