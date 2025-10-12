@@ -52,10 +52,10 @@ const translations = {
         degen: {
             title: 'DEGEN ZONE - Oportunidades de Alto Risco',
             warning: 'RISCO EXTREMO - Invista apenas o que você pode perder',
-            tab_new: 'Novas Listagens',
-            tab_meme: 'Memecoins',
-            tab_whale: 'Alertas de Baleias',
-            tab_arb: 'Arbitragem',
+            tab_gainers: 'Maiores Altas 🚀',
+            tab_losers: 'Maiores Quedas 📉',
+            tab_volume: 'Alto Volume 🔥',
+            tab_new: 'Novas Listagens ⭐',
             new_listing: 'NOVA LISTAGEM',
             memecoin: 'MEMECOIN',
             whale: 'ALERTA DE BALEIA',
@@ -186,10 +186,10 @@ const translations = {
         degen: {
             title: 'DEGEN ZONE - High-Risk Opportunities',
             warning: 'EXTREME RISK - Only invest what you can afford to lose',
-            tab_new: 'New Listings',
-            tab_meme: 'Memecoins',
-            tab_whale: 'Whale Alerts',
-            tab_arb: 'Arbitrage',
+            tab_gainers: 'Top Gainers 🚀',
+            tab_losers: 'Top Losers 📉',
+            tab_volume: 'High Volume 🔥',
+            tab_new: 'New Listings ⭐',
             new_listing: 'NEW LISTING',
             memecoin: 'MEMECOIN',
             whale: 'WHALE ALERT',
@@ -424,6 +424,11 @@ function setupTabs() {
             const targetContent = document.getElementById(targetTab);
             if (targetContent) {
                 targetContent.classList.add('active');
+            }
+
+            // Update degen zone data when switching tabs (if API is loaded)
+            if (window.SignalDegenAPI && targetTab !== 'new-listings') {
+                window.SignalDegenAPI.updateDegenZone(targetTab);
             }
         });
     });

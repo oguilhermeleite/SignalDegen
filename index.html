@@ -319,13 +319,31 @@
             </div>
 
             <div class="tabs">
-                <button class="tab-btn active" data-tab="new-listings" data-i18n="degen.tab_new">New Listings</button>
-                <button class="tab-btn" data-tab="memecoins" data-i18n="degen.tab_meme">Memecoins</button>
-                <button class="tab-btn" data-tab="whale-alerts" data-i18n="degen.tab_whale">Whale Alerts</button>
-                <button class="tab-btn" data-tab="arbitrage" data-i18n="degen.tab_arb">Arbitrage</button>
+                <button class="tab-btn active" data-tab="gainers" data-i18n="degen.tab_gainers">Top Gainers 🚀</button>
+                <button class="tab-btn" data-tab="losers" data-i18n="degen.tab_losers">Top Losers 📉</button>
+                <button class="tab-btn" data-tab="high-volume" data-i18n="degen.tab_volume">High Volume 🔥</button>
+                <button class="tab-btn" data-tab="new-listings" data-i18n="degen.tab_new">New Listings ⭐</button>
             </div>
 
-            <div class="tab-content active" id="new-listings">
+            <div class="tab-content active" id="gainers">
+                <div class="degen-grid">
+                    <!-- Cards will be dynamically loaded via API -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="losers">
+                <div class="degen-grid">
+                    <!-- Cards will be dynamically loaded via API -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="high-volume">
+                <div class="degen-grid">
+                    <!-- Cards will be dynamically loaded via API -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="new-listings">
                 <div class="degen-grid">
                     <!-- Degen Card 1 -->
                     <div class="degen-card">
@@ -364,109 +382,6 @@
                             </div>
                         </div>
                         <div class="risk-badge extreme" data-i18n="degen.risk_extreme">Risk: EXTREME</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-content" id="memecoins">
-                <div class="degen-grid">
-                    <!-- Degen Card 2 -->
-                    <div class="degen-card">
-                        <div class="degen-header">
-                            <span class="degen-tag" data-i18n="degen.memecoin">MEMECOIN</span>
-                            <span class="degen-icon">🐕</span>
-                        </div>
-                        <h3 class="degen-pair">DOGE2.0/USDT</h3>
-                        <div class="degen-info">
-                            <div class="price-info">
-                                <span class="price mono">$0.0000085</span>
-                                <span class="change positive mono">+42.3%</span>
-                            </div>
-                        </div>
-                        <div class="degen-metrics">
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.mcap">Market Cap:</span>
-                                <span class="metric-value mono">$5M</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.holders">Holders:</span>
-                                <span class="metric-value mono">1,250</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.social">Social Buzz:</span>
-                                <span class="metric-value high">HIGH</span>
-                            </div>
-                        </div>
-                        <div class="risk-badge very-high" data-i18n="degen.risk_very_high">Risk: VERY HIGH</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-content" id="whale-alerts">
-                <div class="degen-grid">
-                    <!-- Degen Card 3 -->
-                    <div class="degen-card">
-                        <div class="degen-header">
-                            <span class="degen-tag" data-i18n="degen.whale">WHALE ALERT</span>
-                            <span class="degen-icon">🐋</span>
-                        </div>
-                        <h3 class="degen-pair">BTC</h3>
-                        <div class="degen-info">
-                            <p class="whale-movement">
-                                <span class="amount mono">500 BTC</span>
-                                <span class="arrow">→</span>
-                                <span class="exchange">Binance</span>
-                            </p>
-                            <p class="time-ago">15min <span data-i18n="common.ago">ago</span></p>
-                        </div>
-                        <div class="degen-metrics">
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.value">Value:</span>
-                                <span class="metric-value mono">~$21.6M</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.impact">Impact:</span>
-                                <span class="metric-value" data-i18n="degen.potential_selloff">Potential sell-off</span>
-                            </div>
-                        </div>
-                        <div class="risk-badge medium" data-i18n="degen.risk_medium">Risk: MEDIUM</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-content" id="arbitrage">
-                <div class="degen-grid">
-                    <!-- Degen Card 4 -->
-                    <div class="degen-card">
-                        <div class="degen-header">
-                            <span class="degen-tag" data-i18n="degen.arbitrage">ARBITRAGE</span>
-                            <span class="degen-icon">⚡</span>
-                        </div>
-                        <h3 class="degen-pair">BTC/USDT</h3>
-                        <div class="degen-info">
-                            <div class="arb-comparison">
-                                <div class="arb-item">
-                                    <span class="exchange-name">Binance</span>
-                                    <span class="price mono">$43,250</span>
-                                </div>
-                                <span class="vs">vs</span>
-                                <div class="arb-item">
-                                    <span class="exchange-name">Coinbase</span>
-                                    <span class="price mono">$43,450</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="degen-metrics">
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.gap">Gap:</span>
-                                <span class="metric-value mono">$200 (0.46%)</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.profit">Est. Profit:</span>
-                                <span class="metric-value positive mono">~$150</span>
-                            </div>
-                        </div>
-                        <div class="risk-badge low" data-i18n="degen.risk_low">Risk: LOW</div>
                     </div>
                 </div>
             </div>

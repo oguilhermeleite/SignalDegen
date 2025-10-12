@@ -714,7 +714,13 @@ body {
     font-size: 28px;
     font-weight: 700;
     font-family: var(--font-mono);
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+}
+
+.degen-name {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
 }
 
 .degen-info {
@@ -868,6 +874,60 @@ body {
     color: var(--purple-primary);
     font-weight: 700;
     font-size: 18px;
+}
+
+/* Degen Zone - Dynamic Warnings */
+.degen-warnings {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid var(--color-sell);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.warning-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--color-sell);
+    margin-bottom: 6px;
+}
+
+.warning-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Degen Zone - CoinGecko Button */
+.btn-coingecko {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    color: var(--purple-highlight);
+    border: 2px solid var(--purple-primary);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+}
+
+.btn-coingecko:hover {
+    background: var(--gradient-purple);
+    color: white;
+    border-color: var(--purple-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+/* Degen Zone - Additional Risk Badge Colors */
+.risk-badge.high {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 2px solid #f59e0b;
 }
 
 /* ===========================
