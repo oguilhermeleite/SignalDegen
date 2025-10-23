@@ -396,97 +396,157 @@
                     <span class="title-icon">📈</span>
                     <span data-i18n="backtest.title">Backtesting Simulator</span>
                 </h2>
-                <p class="section-subtitle" data-i18n="backtest.subtitle">Test strategies with historical data</p>
+                <p class="section-subtitle" data-i18n="backtest.subtitle">Test strategies with real historical data</p>
             </div>
 
             <div class="backtest-container">
+                <!-- Configuration Panel -->
                 <div class="backtest-form">
-                    <h3 data-i18n="backtest.filters">Filters</h3>
+                    <h3 data-i18n="backtest.configuration">Configuration</h3>
 
                     <div class="form-group">
                         <label data-i18n="backtest.pair">Trading Pair</label>
-                        <select class="form-control">
-                            <option>BTC/USDT</option>
-                            <option>ETH/USDT</option>
-                            <option>BNB/USDT</option>
-                            <option>SOL/USDT</option>
+                        <select class="form-control" id="backtestPair">
+                            <option value="BTC/USDT">BTC/USDT</option>
+                            <option value="ETH/USDT">ETH/USDT</option>
+                            <option value="SOL/USDT">SOL/USDT</option>
+                            <option value="BNB/USDT">BNB/USDT</option>
+                            <option value="XRP/USDT">XRP/USDT</option>
+                            <option value="ADA/USDT">ADA/USDT</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label data-i18n="backtest.period">Period</label>
-                        <select class="form-control">
-                            <option data-i18n="backtest.period_30d">Last 30 days</option>
-                            <option data-i18n="backtest.period_90d">Last 90 days</option>
-                            <option data-i18n="backtest.period_180d">Last 180 days</option>
-                            <option data-i18n="backtest.period_1y">Last 1 year</option>
+                        <label data-i18n="backtest.period">Time Period</label>
+                        <select class="form-control" id="backtestPeriod">
+                            <option value="7">Last 7 days</option>
+                            <option value="14">Last 14 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="60">Last 60 days</option>
+                            <option value="90">Last 90 days</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label data-i18n="backtest.capital">Initial Capital</label>
-                        <input type="number" class="form-control" value="1000" min="100" step="100">
+                        <label data-i18n="backtest.capital">Initial Capital (USD)</label>
+                        <input type="number" class="form-control" id="backtestCapital" value="1000" min="100" max="100000" step="100">
+                        <small class="form-hint">Min: $100 | Max: $100,000</small>
                     </div>
 
                     <div class="form-group">
                         <label data-i18n="backtest.strategy">Strategy</label>
-                        <select class="form-control">
-                            <option data-i18n="backtest.strategy_safe">Safe Signals Only</option>
-                            <option data-i18n="backtest.strategy_mixed">Mixed (Safe + Degen)</option>
-                            <option data-i18n="backtest.strategy_aggressive">Aggressive (Degen Only)</option>
+                        <select class="form-control" id="backtestStrategy">
+                            <option value="all-signals">All Signals - Follow all BUY/STRONG BUY</option>
+                            <option value="strong-buy-only">Only STRONG BUY - Score &gt; 80</option>
+                            <option value="aggressive">Aggressive - Trade all except SELL</option>
+                            <option value="conservative">Conservative - STRONG BUY + exit on HOLD</option>
                         </select>
                     </div>
 
-                    <button class="btn btn-primary full-width" data-i18n="backtest.simulate">Simulate</button>
+                    <button class="btn btn-primary full-width" id="simulateBtn" data-i18n="backtest.simulate">
+                        <span class="btn-text">Simulate Backtest</span>
+                        <span class="btn-spinner" style="display: none;">⏳</span>
+                    </button>
                 </div>
 
-                <div class="backtest-results">
-                    <h3 data-i18n="backtest.results">Results</h3>
+                <!-- Results Panel -->
+                <div class="backtest-results" id="backtestResults">
+                    <!-- Loading State -->
+                    <div class="backtest-loading" id="backtestLoading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p class="loading-message">Analyzing historical data...</p>
+                        <p class="loading-step" id="loadingStep">Initializing...</p>
+                    </div>
 
-                    <div class="results-summary">
-                        <div class="result-row">
-                            <span class="result-label" data-i18n="backtest.initial">Initial Capital:</span>
-                            <span class="result-value mono">$1,000</span>
+                    <!-- Empty State -->
+                    <div class="backtest-empty" id="backtestEmpty">
+                        <div class="empty-icon">📊</div>
+                        <h3>Ready to Backtest</h3>
+                        <p>Configure your parameters and click "Simulate Backtest" to see how the strategy would have performed with historical data.</p>
+                    </div>
+
+                    <!-- Results Content -->
+                    <div class="backtest-content" id="backtestContent" style="display: none;">
+                        <h3 data-i18n="backtest.results">Results</h3>
+
+                        <!-- Stats Grid -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-label" data-i18n="backtest.initial">Initial Capital</div>
+                                <div class="stat-value mono" id="statInitial">$0.00</div>
+                            </div>
+
+                            <div class="stat-card highlight">
+                                <div class="stat-label" data-i18n="backtest.final">Final Capital</div>
+                                <div class="stat-value mono" id="statFinal">$0.00</div>
+                            </div>
+
+                            <div class="stat-card highlight">
+                                <div class="stat-label" data-i18n="backtest.profit">Total Profit</div>
+                                <div class="stat-value mono" id="statProfit">$0.00 (0%)</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-label" data-i18n="backtest.total_trades">Total Trades</div>
+                                <div class="stat-value mono" id="statTrades">0</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-label" data-i18n="backtest.winrate">Win Rate</div>
+                                <div class="stat-value mono" id="statWinRate">0%</div>
+                                <div class="stat-subtext" id="statWinLoss">0 wins / 0 losses</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-label" data-i18n="backtest.best">Best Trade</div>
+                                <div class="stat-value mono" id="statBest">$0.00</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-label" data-i18n="backtest.worst">Worst Trade</div>
+                                <div class="stat-value mono" id="statWorst">$0.00</div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-label" data-i18n="backtest.avgwin">Avg Win</div>
+                                <div class="stat-value mono" id="statAvgWin">$0.00</div>
+                            </div>
                         </div>
-                        <div class="result-row highlight">
-                            <span class="result-label" data-i18n="backtest.final">Final Capital:</span>
-                            <span class="result-value mono positive">$1,847</span>
+
+                        <!-- Performance Chart -->
+                        <div class="chart-container">
+                            <h4>Portfolio Performance</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
                         </div>
-                        <div class="result-row highlight">
-                            <span class="result-label" data-i18n="backtest.profit">Profit:</span>
-                            <span class="result-value mono positive">+$847 (+84.7%)</span>
+
+                        <!-- Trade History -->
+                        <div class="trades-history" id="tradesHistory">
+                            <div class="trades-header">
+                                <h4>Trade History</h4>
+                                <span class="trades-count" id="tradesCount">0 trades</span>
+                            </div>
+                            <div class="trades-list" id="tradesList">
+                                <!-- Trade items will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Disclaimer -->
+                        <div class="backtest-disclaimer">
+                            <strong>⚠️ Important:</strong> Past performance does not guarantee future results.
+                            This backtesting uses historical data with perfect hindsight and does not account for
+                            slippage, market conditions, or emotional factors in real trading. Use for educational
+                            purposes only.
                         </div>
                     </div>
 
-                    <div class="results-stats">
-                        <div class="stat-box">
-                            <div class="stat-number mono">45</div>
-                            <div class="stat-label" data-i18n="backtest.total_trades">Total Trades</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number mono positive">35</div>
-                            <div class="stat-label" data-i18n="backtest.wins">Wins (77.8%)</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number mono">+$250</div>
-                            <div class="stat-label" data-i18n="backtest.best">Best Trade</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-number mono negative">-$85</div>
-                            <div class="stat-label" data-i18n="backtest.worst">Worst Trade</div>
-                        </div>
-                    </div>
-
-                    <div class="chart-placeholder">
-                        <canvas id="backtest-chart"></canvas>
-                        <div class="chart-overlay">
-                            <span class="chart-icon">📊</span>
-                            <span data-i18n="backtest.chart_placeholder">Performance Chart</span>
-                        </div>
-                    </div>
-
-                    <div class="disclaimer-small" data-i18n="backtest.disclaimer">
-                        Past performance does not guarantee future results
+                    <!-- Error State -->
+                    <div class="backtest-error" id="backtestError" style="display: none;">
+                        <div class="error-icon">⚠️</div>
+                        <h3>Error</h3>
+                        <p id="errorMessage">Something went wrong. Please try again.</p>
+                        <button class="btn btn-outline" onclick="document.getElementById('backtestError').style.display='none'; document.getElementById('backtestEmpty').style.display='flex';">Try Again</button>
                     </div>
                 </div>
             </div>
@@ -616,8 +676,15 @@
         </div>
     </footer>
 
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Application Scripts -->
     <script src="js/api.js"></script>
     <script src="js/notifications.js"></script>
+    <script src="js/backtesting.js"></script>
+    <script src="js/chart-config.js"></script>
+    <script src="js/backtest-ui.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
