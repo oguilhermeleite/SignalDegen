@@ -110,6 +110,60 @@ const translations = {
             chart_placeholder: 'Gráfico de Performance',
             disclaimer: 'Resultados passados não garantem resultados futuros'
         },
+        poolAnalyzer: {
+            title: 'Analisador de Pools de Liquidez',
+            subtitle: 'Analise qualquer pool DeFi de qualquer DEX',
+            inputLabel: 'Endereço do Pool / Par',
+            inputPlaceholder: 'Ex: 8sLbNZoA1cfnvMJLPQtyqdLKZaJ5TCqxYxaWFmvYPump',
+            networkLabel: 'Rede / Blockchain',
+            analyzeBtn: 'Analisar Pool',
+            analyzing: 'Analisando...',
+            metrics: {
+                price: 'Preço Atual',
+                change24h: 'Mudança 24h',
+                liquidity: 'Liquidez',
+                volume24h: 'Volume 24h',
+                marketCap: 'Market Cap',
+                fdv: 'FDV'
+            },
+            aprs: {
+                title: 'Retornos Estimados (APR)',
+                daily: 'APR Diário',
+                monthly: 'APR Mensal',
+                annual: 'APR Anual'
+            },
+            ranges: {
+                title: 'Ranges Estratégicos',
+                subtitle: 'Sugestões de ranges de preço para provedores de liquidez',
+                short: 'Curto Prazo',
+                moderate: 'Moderado',
+                long: 'Longo Prazo',
+                min: 'Mínimo',
+                max: 'Máximo'
+            },
+            risk: {
+                label: 'Nível de Risco',
+                low: 'BAIXO',
+                medium: 'MÉDIO',
+                high: 'ALTO',
+                extreme: 'EXTREMO'
+            },
+            actions: {
+                copy: 'Copiar Análise',
+                viewDex: 'Ver no Dexscreener'
+            },
+            estimatedFee: 'Taxa estimada:',
+            copiedToClipboard: 'Análise copiada para área de transferência!',
+            errors: {
+                emptyAddress: 'Por favor, insira um endereço de pool',
+                notFound: 'Pool não encontrado. Verifique o endereço e a rede.',
+                rateLimit: 'Muitas requisições. Aguarde um minuto e tente novamente.',
+                network: 'Erro de rede. Verifique sua conexão.',
+                invalid: 'Dados do pool inválidos.',
+                unknown: 'Erro ao analisar o pool. Tente novamente.',
+                copyFailed: 'Falha ao copiar para área de transferência'
+            }
+        },
         features: {
             title: 'Por Que SignalDegen?',
             realtime: 'Tempo Real',
@@ -246,6 +300,60 @@ const translations = {
             avgwin: 'Avg Win',
             chart_placeholder: 'Performance Chart',
             disclaimer: 'Past performance does not guarantee future results'
+        },
+        poolAnalyzer: {
+            title: 'Liquidity Pool Analyzer',
+            subtitle: 'Analyze any DeFi pool from any DEX',
+            inputLabel: 'Pool Address / Pair',
+            inputPlaceholder: 'Ex: 8sLbNZoA1cfnvMJLPQtyqdLKZaJ5TCqxYxaWFmvYPump',
+            networkLabel: 'Network / Blockchain',
+            analyzeBtn: 'Analyze Pool',
+            analyzing: 'Analyzing...',
+            metrics: {
+                price: 'Current Price',
+                change24h: '24h Change',
+                liquidity: 'Liquidity',
+                volume24h: '24h Volume',
+                marketCap: 'Market Cap',
+                fdv: 'FDV'
+            },
+            aprs: {
+                title: 'Estimated Returns (APR)',
+                daily: 'Daily APR',
+                monthly: 'Monthly APR',
+                annual: 'Annual APR'
+            },
+            ranges: {
+                title: 'Strategic Ranges',
+                subtitle: 'Suggested price ranges for liquidity providers',
+                short: 'Short Term',
+                moderate: 'Moderate',
+                long: 'Long Term',
+                min: 'Min',
+                max: 'Max'
+            },
+            risk: {
+                label: 'Risk Level',
+                low: 'LOW',
+                medium: 'MEDIUM',
+                high: 'HIGH',
+                extreme: 'EXTREME'
+            },
+            actions: {
+                copy: 'Copy Analysis',
+                viewDex: 'View on Dexscreener'
+            },
+            estimatedFee: 'Estimated fee:',
+            copiedToClipboard: 'Analysis copied to clipboard!',
+            errors: {
+                emptyAddress: 'Please enter a pool address',
+                notFound: 'Pool not found. Check the address and network.',
+                rateLimit: 'Too many requests. Wait a minute and try again.',
+                network: 'Network error. Check your connection.',
+                invalid: 'Invalid pool data.',
+                unknown: 'Error analyzing pool. Try again.',
+                copyFailed: 'Failed to copy to clipboard'
+            }
         },
         features: {
             title: 'Why SignalDegen?',
@@ -620,6 +728,7 @@ function init() {
     setupScrollAnimations();
     setupAnalysisButtons();
     setupBacktestSimulator();
+    setupPoolAnalyzer();
 
     // Initialize chart after a short delay
     setTimeout(() => {
@@ -627,6 +736,307 @@ function init() {
     }, 500);
 
     // Real-time updates are now handled by js/api.js automatically
+}
+
+// ===========================
+// POOL ANALYZER UI LOGIC
+// ===========================
+
+let poolAnalyzer;
+
+function setupPoolAnalyzer() {
+    // Initialize PoolAnalyzer instance
+    if (typeof PoolAnalyzer !== 'undefined') {
+        poolAnalyzer = new PoolAnalyzer();
+        console.log('Pool Analyzer initialized');
+    } else {
+        console.warn('PoolAnalyzer class not found');
+        return;
+    }
+
+    // Get DOM elements
+    const analyzeBtn = document.getElementById('analyzePoolBtn');
+    const poolInput = document.getElementById('poolAddressInput');
+    const networkSelect = document.getElementById('networkSelect');
+    const resultsContainer = document.getElementById('poolAnalysisResults');
+
+    if (!analyzeBtn || !poolInput || !networkSelect || !resultsContainer) {
+        console.warn('Pool analyzer elements not found in DOM');
+        return;
+    }
+
+    // Analyze button click handler
+    analyzeBtn.addEventListener('click', async () => {
+        const poolAddress = poolInput.value.trim();
+        const network = networkSelect.value;
+
+        if (!poolAddress) {
+            showToast(t('poolAnalyzer.errors.emptyAddress'), 'error');
+            return;
+        }
+
+        // Show loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.classList.add('loading');
+        resultsContainer.style.display = 'none';
+
+        try {
+            // Analyze pool
+            const result = await poolAnalyzer.analyzePool(network, poolAddress);
+
+            if (!result.success) {
+                throw new Error(result.error || t('poolAnalyzer.errors.unknown'));
+            }
+
+            // Display results
+            displayPoolResults(result);
+            resultsContainer.style.display = 'block';
+
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        } catch (error) {
+            console.error('Pool analysis error:', error);
+            showToast(error.message || t('poolAnalyzer.errors.unknown'), 'error');
+        } finally {
+            // Reset button state
+            analyzeBtn.disabled = false;
+            analyzeBtn.classList.remove('loading');
+        }
+    });
+
+    // Quick example buttons
+    const quickExamples = document.querySelectorAll('.quick-example');
+    quickExamples.forEach(example => {
+        example.addEventListener('click', () => {
+            const address = example.dataset.address;
+            const network = example.dataset.network;
+
+            if (address) poolInput.value = address;
+            if (network) networkSelect.value = network;
+        });
+    });
+
+    // Enter key to analyze
+    poolInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            analyzeBtn.click();
+        }
+    });
+}
+
+function displayPoolResults(result) {
+    const { poolData, aprs, ranges, risk, feeTier } = result;
+
+    // Update pool pair name
+    const pairNameEl = document.getElementById('poolPairName');
+    if (pairNameEl) {
+        pairNameEl.textContent = `${poolData.baseToken.symbol} / ${poolData.quoteToken.symbol}`;
+    }
+
+    // Update DEX info
+    const dexInfoEl = document.getElementById('poolDexInfo');
+    if (dexInfoEl) {
+        dexInfoEl.textContent = `${poolData.dexId.toUpperCase()} • ${poolData.chainId}`;
+    }
+
+    // Update risk badge
+    updateRiskBadge(risk);
+
+    // Update metrics
+    updatePoolMetrics(poolData);
+
+    // Update APRs
+    updateAPRs(aprs, feeTier);
+
+    // Update ranges
+    updateRanges(ranges, poolData.priceNative);
+
+    // Update action buttons
+    const dexscreenerBtn = document.getElementById('viewOnDexscreener');
+    if (dexscreenerBtn && poolData.url) {
+        dexscreenerBtn.href = poolData.url;
+    }
+
+    // Copy analysis button
+    const copyBtn = document.getElementById('copyAnalysis');
+    if (copyBtn) {
+        copyBtn.onclick = () => copyPoolAnalysis(poolData, aprs, ranges, risk);
+    }
+}
+
+function updateRiskBadge(risk) {
+    const badgeEl = document.getElementById('riskBadge');
+    const reasonsEl = document.getElementById('riskReasons');
+
+    if (badgeEl) {
+        badgeEl.className = `risk-badge ${risk.level.toLowerCase()}`;
+        badgeEl.textContent = `⚠️ ${t('poolAnalyzer.risk.' + risk.level.toLowerCase())}`;
+    }
+
+    if (reasonsEl && risk.reasons.length > 0) {
+        reasonsEl.innerHTML = '<ul>' +
+            risk.reasons.map(reason => `<li>${reason}</li>`).join('') +
+            '</ul>';
+    }
+}
+
+function updatePoolMetrics(poolData) {
+    // Current Price
+    const priceEl = document.getElementById('metricPrice');
+    if (priceEl) {
+        priceEl.textContent = formatPoolPrice(poolData.priceUsd);
+    }
+
+    // 24h Change
+    const changeEl = document.getElementById('metricChange');
+    if (changeEl) {
+        const change = poolData.priceChange.h24;
+        changeEl.className = `metric-value ${change >= 0 ? 'positive' : 'negative'}`;
+        changeEl.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+    }
+
+    // Liquidity
+    const liquidityEl = document.getElementById('metricLiquidity');
+    if (liquidityEl) {
+        liquidityEl.textContent = formatCurrency(poolData.liquidity.usd);
+    }
+
+    // 24h Volume
+    const volumeEl = document.getElementById('metricVolume');
+    if (volumeEl) {
+        volumeEl.textContent = formatCurrency(poolData.volume.h24);
+    }
+
+    // Market Cap
+    const mcapEl = document.getElementById('metricMcap');
+    if (mcapEl) {
+        mcapEl.textContent = poolData.marketCap > 0
+            ? formatCurrency(poolData.marketCap)
+            : 'N/A';
+    }
+
+    // FDV
+    const fdvEl = document.getElementById('metricFdv');
+    if (fdvEl) {
+        fdvEl.textContent = poolData.fdv > 0
+            ? formatCurrency(poolData.fdv)
+            : 'N/A';
+    }
+}
+
+function updateAPRs(aprs, feeTier) {
+    // Daily APR
+    const dailyEl = document.getElementById('aprDaily');
+    if (dailyEl) {
+        dailyEl.textContent = aprs.daily.toFixed(2) + '%';
+    }
+
+    // Monthly APR
+    const monthlyEl = document.getElementById('aprMonthly');
+    if (monthlyEl) {
+        monthlyEl.textContent = aprs.monthly.toFixed(2) + '%';
+    }
+
+    // Annual APR
+    const annualEl = document.getElementById('aprAnnual');
+    if (annualEl) {
+        annualEl.textContent = aprs.annual.toFixed(2) + '%';
+    }
+
+    // Fee tier note
+    const feeNoteEls = document.querySelectorAll('.apr-estimate');
+    feeNoteEls.forEach(el => {
+        el.textContent = t('poolAnalyzer.estimatedFee') + ` ${feeTier}%`;
+    });
+}
+
+function updateRanges(ranges, currentPrice) {
+    // Short Range
+    const shortMinEl = document.getElementById('shortMin');
+    const shortMaxEl = document.getElementById('shortMax');
+    const shortPercentEl = document.getElementById('shortPercent');
+
+    if (shortMinEl) shortMinEl.textContent = formatPoolPrice(ranges.short.min);
+    if (shortMaxEl) shortMaxEl.textContent = formatPoolPrice(ranges.short.max);
+    if (shortPercentEl) shortPercentEl.textContent = `±${ranges.short.percent.toFixed(1)}%`;
+
+    // Moderate Range
+    const modMinEl = document.getElementById('moderateMin');
+    const modMaxEl = document.getElementById('moderateMax');
+    const modPercentEl = document.getElementById('moderatePercent');
+
+    if (modMinEl) modMinEl.textContent = formatPoolPrice(ranges.moderate.min);
+    if (modMaxEl) modMaxEl.textContent = formatPoolPrice(ranges.moderate.max);
+    if (modPercentEl) modPercentEl.textContent = `±${ranges.moderate.percent.toFixed(1)}%`;
+
+    // Long Range
+    const longMinEl = document.getElementById('longMin');
+    const longMaxEl = document.getElementById('longMax');
+    const longPercentEl = document.getElementById('longPercent');
+
+    if (longMinEl) longMinEl.textContent = formatPoolPrice(ranges.long.min);
+    if (longMaxEl) longMaxEl.textContent = formatPoolPrice(ranges.long.max);
+    if (longPercentEl) longPercentEl.textContent = `±${ranges.long.percent.toFixed(1)}%`;
+}
+
+function formatPoolPrice(price) {
+    if (price >= 1) {
+        return '$' + price.toFixed(2);
+    } else if (price >= 0.01) {
+        return '$' + price.toFixed(4);
+    } else if (price >= 0.0001) {
+        return '$' + price.toFixed(6);
+    } else {
+        return '$' + price.toExponential(2);
+    }
+}
+
+function formatCurrency(value) {
+    if (value >= 1e9) {
+        return '$' + (value / 1e9).toFixed(2) + 'B';
+    } else if (value >= 1e6) {
+        return '$' + (value / 1e6).toFixed(2) + 'M';
+    } else if (value >= 1e3) {
+        return '$' + (value / 1e3).toFixed(2) + 'K';
+    } else {
+        return '$' + value.toFixed(2);
+    }
+}
+
+function copyPoolAnalysis(poolData, aprs, ranges, risk) {
+    const text = `
+🔍 Pool Analysis: ${poolData.baseToken.symbol}/${poolData.quoteToken.symbol}
+
+💰 Current Price: ${formatPoolPrice(poolData.priceUsd)}
+📊 24h Change: ${poolData.priceChange.h24.toFixed(2)}%
+💧 Liquidity: ${formatCurrency(poolData.liquidity.usd)}
+📈 24h Volume: ${formatCurrency(poolData.volume.h24)}
+
+⚡ Estimated APRs:
+• Daily: ${aprs.daily.toFixed(2)}%
+• Monthly: ${aprs.monthly.toFixed(2)}%
+• Annual: ${aprs.annual.toFixed(2)}%
+
+🎯 Strategic Ranges:
+• Short (±${ranges.short.percent.toFixed(1)}%): ${formatPoolPrice(ranges.short.min)} - ${formatPoolPrice(ranges.short.max)}
+• Moderate (±${ranges.moderate.percent.toFixed(1)}%): ${formatPoolPrice(ranges.moderate.min)} - ${formatPoolPrice(ranges.moderate.max)}
+• Long (±${ranges.long.percent.toFixed(1)}%): ${formatPoolPrice(ranges.long.min)} - ${formatPoolPrice(ranges.long.max)}
+
+⚠️ Risk Level: ${risk.level}
+
+📍 DEX: ${poolData.dexId.toUpperCase()} on ${poolData.chainId}
+🔗 ${poolData.url || ''}
+
+Generated by SignalDegen Pool Analyzer
+    `.trim();
+
+    navigator.clipboard.writeText(text).then(() => {
+        showToast(t('poolAnalyzer.copiedToClipboard'), 'success');
+    }).catch(err => {
+        console.error('Copy failed:', err);
+        showToast(t('poolAnalyzer.errors.copyFailed'), 'error');
+    });
 }
 
 // ===========================

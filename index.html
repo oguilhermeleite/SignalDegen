@@ -27,6 +27,7 @@
                     <a href="#home" class="nav-link" data-i18n="nav.home">Home</a>
                     <a href="#safe-signals" class="nav-link" data-i18n="nav.safe">Safe Signals</a>
                     <a href="#degen-zone" class="nav-link" data-i18n="nav.degen">Degen Zone</a>
+                    <a href="#pool-analyzer" class="nav-link" data-i18n="nav.poolAnalyzer">Pool Analyzer</a>
                     <a href="#backtesting" class="nav-link" data-i18n="nav.backtesting">Backtesting</a>
                     <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
                 </nav>
@@ -388,6 +389,208 @@
         </div>
     </section>
 
+    <!-- Pool Analyzer Section -->
+    <section class="pool-analyzer-section" id="pool-analyzer">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">💧</span>
+                    <span data-i18n="poolAnalyzer.title">LIQUIDITY POOL ANALYZER</span>
+                </h2>
+                <p class="section-subtitle" data-i18n="poolAnalyzer.subtitle">Analyze Liquidity Pools from Any DEX</p>
+            </div>
+
+            <!-- Input Form -->
+            <div class="analyzer-input-card">
+                <div class="input-group">
+                    <label data-i18n="poolAnalyzer.labels.poolAddress">Pool Address / Pool ID</label>
+                    <input
+                        type="text"
+                        id="poolAddressInput"
+                        placeholder="Ex: 8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj"
+                        class="pool-input"
+                    />
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group half">
+                        <label data-i18n="poolAnalyzer.labels.network">Network</label>
+                        <select id="networkSelect" class="pool-select">
+                            <option value="solana">Solana</option>
+                            <option value="ethereum">Ethereum</option>
+                            <option value="arbitrum">Arbitrum</option>
+                            <option value="base">Base</option>
+                            <option value="bsc">BSC</option>
+                            <option value="polygon">Polygon</option>
+                            <option value="avalanche">Avalanche</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group half">
+                        <label data-i18n="poolAnalyzer.labels.dex">DEX (Optional)</label>
+                        <select id="dexSelect" class="pool-select">
+                            <option value="">Auto-detect</option>
+                            <option value="raydium">Raydium</option>
+                            <option value="orca">Orca</option>
+                            <option value="meteora">Meteora</option>
+                            <option value="uniswap">Uniswap</option>
+                            <option value="pancakeswap">PancakeSwap</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="analyzePoolBtn" class="analyze-btn">
+                    <span class="btn-text" data-i18n="poolAnalyzer.labels.analyzeBtn">Analyze Pool</span>
+                    <span class="btn-icon">🔍</span>
+                </button>
+
+                <div class="quick-examples">
+                    <span class="examples-label">Quick examples:</span>
+                    <button class="example-btn" data-address="58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2" data-network="solana">
+                        SOL/USDC (Orca)
+                    </button>
+                    <button class="example-btn" data-address="8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj" data-network="solana">
+                        RAY/SOL (Raydium)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Display -->
+            <div id="poolAnalysisResults" class="pool-results" style="display: none;">
+                <!-- Header -->
+                <div class="results-header">
+                    <div class="pool-title">
+                        <span class="token-pair"></span>
+                        <span class="dex-badge"></span>
+                    </div>
+                    <div class="analysis-time"></div>
+                </div>
+
+                <!-- Risk Badge -->
+                <div class="risk-badge-container">
+                    <div class="risk-badge">
+                        <span class="risk-icon">🚨</span>
+                        <span class="risk-label">Risk:</span>
+                        <span class="risk-level"></span>
+                    </div>
+                    <div class="risk-reasons"></div>
+                </div>
+
+                <!-- Key Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">💧</div>
+                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.liquidity">Liquidity</div>
+                        <div class="metric-value" id="liquidityValue"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">⚡</div>
+                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.volume">Volume 24h</div>
+                        <div class="metric-value" id="volumeValue"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">💲</div>
+                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.fee">Fee Tier</div>
+                        <div class="metric-value" id="feeValue"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon">📈</div>
+                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.priceChange">24h Change</div>
+                        <div class="metric-value" id="priceChangeValue"></div>
+                    </div>
+                </div>
+
+                <!-- APRs Section -->
+                <div class="aprs-section">
+                    <h3 class="subsection-title">📊 <span data-i18n="poolAnalyzer.aprs.title">Estimated APRs</span></h3>
+                    <div class="aprs-grid">
+                        <div class="apr-card">
+                            <div class="apr-period" data-i18n="poolAnalyzer.aprs.daily">Daily</div>
+                            <div class="apr-value" id="dailyAPR"></div>
+                        </div>
+                        <div class="apr-card">
+                            <div class="apr-period" data-i18n="poolAnalyzer.aprs.monthly">Monthly</div>
+                            <div class="apr-value" id="monthlyAPR"></div>
+                        </div>
+                        <div class="apr-card highlighted">
+                            <div class="apr-period" data-i18n="poolAnalyzer.aprs.annual">Annual</div>
+                            <div class="apr-value" id="annualAPR"></div>
+                        </div>
+                    </div>
+                    <div class="apr-disclaimer" data-i18n="poolAnalyzer.aprs.disclaimer">
+                        ⚠️ APRs are estimated based on 24h volume and current liquidity. Actual returns may vary significantly.
+                    </div>
+                </div>
+
+                <!-- Strategic Ranges -->
+                <div class="ranges-section">
+                    <h3 class="subsection-title">🎯 <span data-i18n="poolAnalyzer.ranges.title">Strategic Price Ranges</span></h3>
+
+                    <div class="range-card short-range">
+                        <div class="range-header">
+                            <span class="range-icon">🔴</span>
+                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.short">Short Range</span> (±3%)</span>
+                        </div>
+                        <div class="range-prices">
+                            <span class="range-min" id="shortMin"></span>
+                            <span class="range-separator">→</span>
+                            <span class="range-max" id="shortMax"></span>
+                        </div>
+                        <div class="range-description" data-i18n="poolAnalyzer.ranges.shortDesc">
+                            High fee capture, requires frequent management
+                        </div>
+                    </div>
+
+                    <div class="range-card moderate-range">
+                        <div class="range-header">
+                            <span class="range-icon">🟡</span>
+                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.moderate">Moderate Range</span> (±7%)</span>
+                        </div>
+                        <div class="range-prices">
+                            <span class="range-min" id="moderateMin"></span>
+                            <span class="range-separator">→</span>
+                            <span class="range-max" id="moderateMax"></span>
+                        </div>
+                        <div class="range-description" data-i18n="poolAnalyzer.ranges.moderateDesc">
+                            Balanced approach, moderate management
+                        </div>
+                    </div>
+
+                    <div class="range-card long-range">
+                        <div class="range-header">
+                            <span class="range-icon">🟢</span>
+                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.long">Long Range</span> (±18%)</span>
+                        </div>
+                        <div class="range-prices">
+                            <span class="range-min" id="longMin"></span>
+                            <span class="range-separator">→</span>
+                            <span class="range-max" id="longMax"></span>
+                        </div>
+                        <div class="range-description" data-i18n="poolAnalyzer.ranges.longDesc">
+                            Lower fees but less rebalancing needed
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="results-actions">
+                    <button class="action-btn primary" id="copyAnalysisBtn">
+                        <span data-i18n="poolAnalyzer.actions.copy">📋 Copy Analysis</span>
+                    </button>
+                    <button class="action-btn secondary" id="viewOnDexBtn">
+                        <span data-i18n="poolAnalyzer.actions.viewDex">🔗 View on Dexscreener</span>
+                    </button>
+                    <button class="action-btn" id="newAnalysisBtn">
+                        <span data-i18n="poolAnalyzer.actions.newAnalysis">🔄 New Analysis</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Backtesting Section -->
     <section class="backtesting" id="backtesting">
         <div class="container">
@@ -682,6 +885,7 @@
     <!-- Application Scripts -->
     <script src="js/api.js"></script>
     <script src="js/notifications.js"></script>
+    <script src="js/pool-analyzer.js"></script>
     <script src="js/backtesting.js"></script>
     <script src="js/chart-config.js"></script>
     <script src="js/backtest-ui.js"></script>
