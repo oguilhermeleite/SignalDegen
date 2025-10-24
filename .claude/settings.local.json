@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Liquidity Pool Analyzer with Dexscreener integration\n\n- Created js/pool-analyzer.js with PoolAnalyzer class\n  - Dexscreener API integration for pool data\n  - APR calculations (daily, monthly, annual)\n  - Strategic range calculations (short, moderate, long)\n  - Risk assessment based on liquidity, volume, age, volatility\n  - 2-minute caching mechanism\n  - Custom error handling with PoolAnalyzerError class\n\n- Updated index.html with Pool Analyzer section\n  - Added input form for pool address and network selection\n  - Complete results display with metrics grid\n  - APR cards with gradient styling\n  - Strategic range cards with color coding\n  - Action buttons (copy analysis, view on Dexscreener)\n  - Added navigation link for Pool Analyzer\n\n- Added comprehensive CSS styles to styles.css\n  - 784 lines of new styling matching purple/pink neon theme\n  - Glassmorphism effects with backdrop-filter\n  - Neon glow animations and 3D hover effects\n  - Responsive design for mobile, tablet, and desktop\n  - Loading states and error displays\n\n- Added Pool Analyzer UI logic to script.js\n  - Event handlers for analyze button and quick examples\n  - Display functions for all pool metrics and calculations\n  - Copy to clipboard functionality\n  - Integration with translation system\n  - Helper functions for price and currency formatting\n\n- Added comprehensive translations (PT/EN)\n  - All UI labels, buttons, and messages\n  - Error messages for different failure scenarios\n  - Risk level labels and descriptions\n\nGenerated with Claude Code\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

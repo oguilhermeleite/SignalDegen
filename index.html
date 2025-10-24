@@ -476,6 +476,14 @@
                     <div class="risk-reasons"></div>
                 </div>
 
+                <!-- Pool Objectives Section -->
+                <div class="pool-objectives-section">
+                    <h3 class="subsection-title">▶️ <span data-i18n="poolAnalyzer.objectives.title">Pool Objective</span></h3>
+                    <div class="objectives-list" id="poolObjectives">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
                 <!-- Key Metrics Grid -->
                 <div class="metrics-grid">
                     <div class="metric-card">
@@ -532,46 +540,55 @@
                     <div class="range-card short-range">
                         <div class="range-header">
                             <span class="range-icon">🔴</span>
-                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.short">Short Range</span> (±3%)</span>
+                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.short">Short Range</span> (<span id="shortPercent">±3%</span>)</span>
                         </div>
                         <div class="range-prices">
                             <span class="range-min" id="shortMin"></span>
                             <span class="range-separator">→</span>
                             <span class="range-max" id="shortMax"></span>
                         </div>
-                        <div class="range-description" data-i18n="poolAnalyzer.ranges.shortDesc">
-                            High fee capture, requires frequent management
+                        <div class="range-observation" id="shortObservation">
+                            <!-- Contextual observation -->
                         </div>
                     </div>
 
                     <div class="range-card moderate-range">
                         <div class="range-header">
                             <span class="range-icon">🟡</span>
-                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.moderate">Moderate Range</span> (±7%)</span>
+                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.moderate">Moderate Range</span> (<span id="moderatePercent">±7%</span>)</span>
                         </div>
                         <div class="range-prices">
                             <span class="range-min" id="moderateMin"></span>
                             <span class="range-separator">→</span>
                             <span class="range-max" id="moderateMax"></span>
                         </div>
-                        <div class="range-description" data-i18n="poolAnalyzer.ranges.moderateDesc">
-                            Balanced approach, moderate management
+                        <div class="range-observation" id="moderateObservation">
+                            <!-- Contextual observation -->
                         </div>
                     </div>
 
                     <div class="range-card long-range">
                         <div class="range-header">
                             <span class="range-icon">🟢</span>
-                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.long">Long Range</span> (±18%)</span>
+                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.long">Long Range</span> (<span id="longPercent">±18%</span>)</span>
                         </div>
                         <div class="range-prices">
                             <span class="range-min" id="longMin"></span>
                             <span class="range-separator">→</span>
                             <span class="range-max" id="longMax"></span>
                         </div>
-                        <div class="range-description" data-i18n="poolAnalyzer.ranges.longDesc">
-                            Lower fees but less rebalancing needed
+                        <div class="range-observation" id="longObservation">
+                            <!-- Contextual observation -->
                         </div>
+                    </div>
+                </div>
+
+                <!-- Important Notice -->
+                <div class="important-notice">
+                    <div class="notice-icon">⚠️</div>
+                    <div class="notice-content">
+                        <strong data-i18n="poolAnalyzer.important.title">Important:</strong>
+                        <p id="importantNotice"></p>
                     </div>
                 </div>
 

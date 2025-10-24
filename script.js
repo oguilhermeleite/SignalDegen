@@ -148,9 +148,16 @@ const translations = {
                 high: 'ALTO',
                 extreme: 'EXTREMO'
             },
+            objectives: {
+                title: 'Objetivo da Pool'
+            },
+            important: {
+                title: 'Importante'
+            },
             actions: {
                 copy: 'Copiar Análise',
-                viewDex: 'Ver no Dexscreener'
+                viewDex: 'Ver no Dexscreener',
+                newAnalysis: 'Nova Análise'
             },
             estimatedFee: 'Taxa estimada:',
             copiedToClipboard: 'Análise copiada para área de transferência!',
@@ -339,9 +346,16 @@ const translations = {
                 high: 'HIGH',
                 extreme: 'EXTREME'
             },
+            objectives: {
+                title: 'Pool Objective'
+            },
+            important: {
+                title: 'Important'
+            },
             actions: {
                 copy: 'Copy Analysis',
-                viewDex: 'View on Dexscreener'
+                viewDex: 'View on Dexscreener',
+                newAnalysis: 'New Analysis'
             },
             estimatedFee: 'Estimated fee:',
             copiedToClipboard: 'Analysis copied to clipboard!',
@@ -828,40 +842,112 @@ function setupPoolAnalyzer() {
 function displayPoolResults(result) {
     const { poolData, aprs, ranges, risk, feeTier } = result;
 
-    // Update pool pair name
-    const pairNameEl = document.getElementById('poolPairName');
-    if (pairNameEl) {
-        pairNameEl.textContent = `${poolData.baseToken.symbol} / ${poolData.quoteToken.symbol}`;
+    // Detect strategy
+    const strategy = poolAnalyzer.detectPoolStrategy(poolData.baseToken, poolData.quoteToken);
+    const strategyName = poolAnalyzer.getStrategyName(strategy, currentLang);
+
+    // Update pool pair name with strategy
+    const tokenPairEl = document.querySelector('.token-pair');
+    if (tokenPairEl) {
+        tokenPairEl.textContent = `${poolData.baseToken.symbol} / ${poolData.quoteToken.symbol} (${strategyName})`;
     }
 
     // Update DEX info
-    const dexInfoEl = document.getElementById('poolDexInfo');
-    if (dexInfoEl) {
-        dexInfoEl.textContent = `${poolData.dexId.toUpperCase()} • ${poolData.chainId}`;
+    const dexBadgeEl = document.querySelector('.dex-badge');
+    if (dexBadgeEl) {
+        dexBadgeEl.textContent = `${poolData.dexId.toUpperCase()} • ${poolData.chainId}`;
+    }
+
+    // Update analysis time
+    const analysisTimeEl = document.querySelector('.analysis-time');
+    if (analysisTimeEl) {
+        const now = new Date();
+        analysisTimeEl.textContent = t('common.updated') + ' ' + now.toLocaleTimeString(currentLang === 'pt' ? 'pt-BR' : 'en-US', { hour: '2-digit', minute: '2-digit' });
     }
 
     // Update risk badge
     updateRiskBadge(risk);
 
+    // Generate and display objectives
+    const objectives = poolAnalyzer.generateObjectives(
+        strategy,
+        poolData.baseToken,
+        poolData.quoteToken,
+        currentLang
+    );
+
+    const objectivesList = document.getElementById('poolObjectives');
+    if (objectivesList) {
+        objectivesList.innerHTML = objectives.map(obj =>
+            `<div class="objective-item">✔️ ${obj}</div>`
+        ).join('');
+    }
+
     // Update metrics
-    updatePoolMetrics(poolData);
+    updatePoolMetrics(poolData, feeTier);
 
     // Update APRs
     updateAPRs(aprs, feeTier);
 
-    // Update ranges
-    updateRanges(ranges, poolData.priceNative);
+    // Generate range observations
+    const rangeObs = poolAnalyzer.generateRangeObservations(
+        strategy,
+        ranges,
+        poolData.priceNative,
+        currentLang
+    );
 
-    // Update action buttons
-    const dexscreenerBtn = document.getElementById('viewOnDexscreener');
-    if (dexscreenerBtn && poolData.url) {
-        dexscreenerBtn.href = poolData.url;
+    // Update ranges with observations
+    updateRanges(ranges, poolData.priceNative, rangeObs);
+
+    // Generate and display important notice
+    const notice = poolAnalyzer.generateImportantNotice(
+        poolData.priceNative,
+        ranges,
+        poolData.baseToken,
+        poolData.quoteToken,
+        currentLang
+    );
+
+    const importantNoticeEl = document.getElementById('importantNotice');
+    if (importantNoticeEl) {
+        importantNoticeEl.textContent = notice;
     }
 
+    // Update action buttons
+    setupActionButtons(poolData, aprs, ranges, risk, strategy);
+}
+
+function setupActionButtons(poolData, aprs, ranges, risk, strategy) {
     // Copy analysis button
-    const copyBtn = document.getElementById('copyAnalysis');
+    const copyBtn = document.getElementById('copyAnalysisBtn');
     if (copyBtn) {
-        copyBtn.onclick = () => copyPoolAnalysis(poolData, aprs, ranges, risk);
+        copyBtn.onclick = () => copyPoolAnalysis(poolData, aprs, ranges, risk, strategy);
+    }
+
+    // View on DEX button
+    const viewBtn = document.getElementById('viewOnDexBtn');
+    if (viewBtn && poolData.url) {
+        let createPositionLink = poolData.url;
+
+        // Try to generate Raydium direct link if on Solana
+        if (poolData.chainId === 'solana' && poolData.dexId.toLowerCase().includes('raydium')) {
+            createPositionLink = `https://raydium.io/clmm/create-position/?pool_id=${poolData.pairAddress}`;
+        }
+
+        viewBtn.onclick = () => {
+            window.open(createPositionLink, '_blank');
+        };
+    }
+
+    // New analysis button
+    const newAnalysisBtn = document.getElementById('newAnalysisBtn');
+    if (newAnalysisBtn) {
+        newAnalysisBtn.onclick = () => {
+            document.getElementById('poolAnalysisResults').style.display = 'none';
+            document.getElementById('poolAddressInput').value = '';
+            document.getElementById('poolAddressInput').focus();
+        };
     }
 }
 
@@ -881,103 +967,87 @@ function updateRiskBadge(risk) {
     }
 }
 
-function updatePoolMetrics(poolData) {
-    // Current Price
-    const priceEl = document.getElementById('metricPrice');
-    if (priceEl) {
-        priceEl.textContent = formatPoolPrice(poolData.priceUsd);
-    }
-
-    // 24h Change
-    const changeEl = document.getElementById('metricChange');
-    if (changeEl) {
-        const change = poolData.priceChange.h24;
-        changeEl.className = `metric-value ${change >= 0 ? 'positive' : 'negative'}`;
-        changeEl.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
-    }
-
+function updatePoolMetrics(poolData, feeTier) {
     // Liquidity
-    const liquidityEl = document.getElementById('metricLiquidity');
+    const liquidityEl = document.getElementById('liquidityValue');
     if (liquidityEl) {
         liquidityEl.textContent = formatCurrency(poolData.liquidity.usd);
     }
 
     // 24h Volume
-    const volumeEl = document.getElementById('metricVolume');
+    const volumeEl = document.getElementById('volumeValue');
     if (volumeEl) {
         volumeEl.textContent = formatCurrency(poolData.volume.h24);
     }
 
-    // Market Cap
-    const mcapEl = document.getElementById('metricMcap');
-    if (mcapEl) {
-        mcapEl.textContent = poolData.marketCap > 0
-            ? formatCurrency(poolData.marketCap)
-            : 'N/A';
+    // Fee Tier
+    const feeEl = document.getElementById('feeValue');
+    if (feeEl) {
+        feeEl.textContent = feeTier + '%';
     }
 
-    // FDV
-    const fdvEl = document.getElementById('metricFdv');
-    if (fdvEl) {
-        fdvEl.textContent = poolData.fdv > 0
-            ? formatCurrency(poolData.fdv)
-            : 'N/A';
+    // 24h Price Change
+    const changeEl = document.getElementById('priceChangeValue');
+    if (changeEl) {
+        const change = poolData.priceChange.h24;
+        changeEl.className = `metric-value ${change >= 0 ? 'positive' : 'negative'}`;
+        changeEl.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
     }
 }
 
 function updateAPRs(aprs, feeTier) {
     // Daily APR
-    const dailyEl = document.getElementById('aprDaily');
+    const dailyEl = document.getElementById('dailyAPR');
     if (dailyEl) {
         dailyEl.textContent = aprs.daily.toFixed(2) + '%';
     }
 
     // Monthly APR
-    const monthlyEl = document.getElementById('aprMonthly');
+    const monthlyEl = document.getElementById('monthlyAPR');
     if (monthlyEl) {
         monthlyEl.textContent = aprs.monthly.toFixed(2) + '%';
     }
 
     // Annual APR
-    const annualEl = document.getElementById('aprAnnual');
+    const annualEl = document.getElementById('annualAPR');
     if (annualEl) {
         annualEl.textContent = aprs.annual.toFixed(2) + '%';
     }
-
-    // Fee tier note
-    const feeNoteEls = document.querySelectorAll('.apr-estimate');
-    feeNoteEls.forEach(el => {
-        el.textContent = t('poolAnalyzer.estimatedFee') + ` ${feeTier}%`;
-    });
 }
 
-function updateRanges(ranges, currentPrice) {
+function updateRanges(ranges, currentPrice, rangeObs) {
     // Short Range
     const shortMinEl = document.getElementById('shortMin');
     const shortMaxEl = document.getElementById('shortMax');
     const shortPercentEl = document.getElementById('shortPercent');
+    const shortObsEl = document.getElementById('shortObservation');
 
     if (shortMinEl) shortMinEl.textContent = formatPoolPrice(ranges.short.min);
     if (shortMaxEl) shortMaxEl.textContent = formatPoolPrice(ranges.short.max);
     if (shortPercentEl) shortPercentEl.textContent = `±${ranges.short.percent.toFixed(1)}%`;
+    if (shortObsEl) shortObsEl.textContent = rangeObs.short;
 
     // Moderate Range
     const modMinEl = document.getElementById('moderateMin');
     const modMaxEl = document.getElementById('moderateMax');
     const modPercentEl = document.getElementById('moderatePercent');
+    const modObsEl = document.getElementById('moderateObservation');
 
     if (modMinEl) modMinEl.textContent = formatPoolPrice(ranges.moderate.min);
     if (modMaxEl) modMaxEl.textContent = formatPoolPrice(ranges.moderate.max);
     if (modPercentEl) modPercentEl.textContent = `±${ranges.moderate.percent.toFixed(1)}%`;
+    if (modObsEl) modObsEl.textContent = rangeObs.moderate;
 
     // Long Range
     const longMinEl = document.getElementById('longMin');
     const longMaxEl = document.getElementById('longMax');
     const longPercentEl = document.getElementById('longPercent');
+    const longObsEl = document.getElementById('longObservation');
 
     if (longMinEl) longMinEl.textContent = formatPoolPrice(ranges.long.min);
     if (longMaxEl) longMaxEl.textContent = formatPoolPrice(ranges.long.max);
     if (longPercentEl) longPercentEl.textContent = `±${ranges.long.percent.toFixed(1)}%`;
+    if (longObsEl) longObsEl.textContent = rangeObs.long;
 }
 
 function formatPoolPrice(price) {
@@ -1004,9 +1074,12 @@ function formatCurrency(value) {
     }
 }
 
-function copyPoolAnalysis(poolData, aprs, ranges, risk) {
+function copyPoolAnalysis(poolData, aprs, ranges, risk, strategy) {
+    const strategyName = poolAnalyzer.getStrategyName(strategy, currentLang);
+
     const text = `
 🔍 Pool Analysis: ${poolData.baseToken.symbol}/${poolData.quoteToken.symbol}
+📋 Strategy: ${strategyName}
 
 💰 Current Price: ${formatPoolPrice(poolData.priceUsd)}
 📊 24h Change: ${poolData.priceChange.h24.toFixed(2)}%
