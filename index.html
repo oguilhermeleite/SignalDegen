@@ -491,49 +491,72 @@
                             <span data-i18n="poolAnalyzer.chart.title">Range Visualization</span>
                         </h3>
                         <div class="current-price-display">
-                            <span class="price-label">Current Price:</span>
+                            <span class="price-label" data-i18n="poolAnalyzer.chart.currentPrice">Current Price</span>
                             <span class="price-value" id="currentPriceChart"></span>
-                            <span class="price-pair" id="pricePairChart"></span>
                         </div>
                     </div>
 
-                    <!-- Chart Canvas -->
-                    <div class="chart-container">
-                        <canvas id="rangeChart"></canvas>
-                    </div>
-
-                    <!-- Range Position Alert -->
+                    <!-- Range Position Alert (moved above chart) -->
                     <div class="range-alert" id="rangeAlert" style="display: none;">
                         <div class="alert-icon"></div>
                         <div class="alert-message"></div>
                     </div>
 
-                    <!-- Price Controls -->
+                    <!-- Chart Canvas (reduced height to 300px) -->
+                    <div class="chart-container">
+                        <canvas id="rangeChart"></canvas>
+                    </div>
+
+                    <!-- Compact Range Prices Below Chart -->
+                    <div class="range-prices-compact">
+                        <div class="range-price-item short">
+                            <span class="range-icon">🔴</span>
+                            <span class="range-name" data-i18n="poolAnalyzer.ranges.short">Short</span>:
+                            <span class="range-values">
+                                <span id="shortMinCompact"></span> → <span id="shortMaxCompact"></span>
+                            </span>
+                        </div>
+                        <div class="range-price-item moderate">
+                            <span class="range-icon">🟡</span>
+                            <span class="range-name" data-i18n="poolAnalyzer.ranges.moderate">Moderate</span>:
+                            <span class="range-values">
+                                <span id="moderateMinCompact"></span> → <span id="moderateMaxCompact"></span>
+                            </span>
+                        </div>
+                        <div class="range-price-item long">
+                            <span class="range-icon">🟢</span>
+                            <span class="range-name" data-i18n="poolAnalyzer.ranges.long">Long</span>:
+                            <span class="range-values">
+                                <span id="longMinCompact"></span> → <span id="longMaxCompact"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Simplified Price Controls (side by side, smaller) -->
                     <div class="price-controls">
                         <div class="price-control-group">
-                            <label>Min Price</label>
+                            <label data-i18n="poolAnalyzer.chart.minPrice">Min Price</label>
                             <div class="control-input">
                                 <button class="control-btn minus" data-target="minPrice">-</button>
                                 <input type="number" id="minPrice" class="price-input" step="0.0001" readonly>
                                 <button class="control-btn plus" data-target="minPrice">+</button>
                             </div>
-                            <div class="control-label" id="minPriceLabel"></div>
                         </div>
 
                         <div class="price-control-group">
-                            <label>Max Price</label>
+                            <label data-i18n="poolAnalyzer.chart.maxPrice">Max Price</label>
                             <div class="control-input">
                                 <button class="control-btn minus" data-target="maxPrice">-</button>
                                 <input type="number" id="maxPrice" class="price-input" step="0.0001" readonly>
                                 <button class="control-btn plus" data-target="maxPrice">+</button>
                             </div>
-                            <div class="control-label" id="maxPriceLabel"></div>
                         </div>
                     </div>
 
+                    <!-- Simplified Chart Note -->
                     <div class="chart-note">
-                        💡 <span data-i18n="poolAnalyzer.chart.note">
-                            Adjust Min/Max prices to see how ranges change. Colored lines show limits for each strategy.
+                        <span data-i18n="poolAnalyzer.chart.note">
+                            💡 Colored lines = range limits. Adjust Min/Max to recalculate.
                         </span>
                     </div>
                 </div>
@@ -652,7 +675,7 @@
                         <span data-i18n="poolAnalyzer.actions.copy">📋 Copy Analysis</span>
                     </button>
                     <button class="action-btn secondary" id="viewOnDexBtn">
-                        <span data-i18n="poolAnalyzer.actions.viewDex">🔗 View on Dexscreener</span>
+                        <span data-i18n="poolAnalyzer.actions.goToPool">🔗 Go to Pool</span>
                     </button>
                     <button class="action-btn" id="newAnalysisBtn">
                         <span data-i18n="poolAnalyzer.actions.newAnalysis">🔄 New Analysis</span>

@@ -3650,14 +3650,76 @@ body::before {
     font-style: italic;
 }
 
+/* Range Alert Box (moved above chart, compact) */
+.range-alert {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 12px;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-md);
+    border-left: 3px solid;
+    backdrop-filter: blur(10px);
+    animation: slideInDown 0.3s ease;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.range-alert.safe {
+    background: rgba(34, 197, 94, 0.12);
+    border-left-color: #22c55e;
+}
+
+.range-alert.info {
+    background: rgba(59, 130, 246, 0.12);
+    border-left-color: #3b82f6;
+}
+
+.range-alert.caution {
+    background: rgba(251, 146, 60, 0.12);
+    border-left-color: #fb923c;
+}
+
+.range-alert.warning {
+    background: rgba(245, 158, 11, 0.12);
+    border-left-color: #f59e0b;
+}
+
+.range-alert.danger {
+    background: rgba(239, 68, 68, 0.12);
+    border-left-color: #ef4444;
+}
+
+.range-alert .alert-icon {
+    font-size: 24px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.range-alert .alert-message {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 .chart-container {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 300px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: var(--border-radius);
     padding: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
     border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
@@ -3667,85 +3729,71 @@ body::before {
     height: 100% !important;
 }
 
-/* Range Alert Box */
-.range-alert {
-    display: none;
-    align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md) var(--spacing-lg);
+/* Compact Range Prices Below Chart */
+.range-prices-compact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: var(--border-radius);
-    margin-bottom: var(--spacing-lg);
-    border-left: 4px solid;
-    backdrop-filter: blur(10px);
-    animation: slideInDown 0.4s ease;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid rgba(168, 85, 247, 0.15);
 }
 
-@keyframes slideInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.range-price-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 14px;
+    line-height: 1.4;
 }
 
-.range-alert.safe {
-    background: rgba(34, 197, 94, 0.15);
-    border-left-color: #22c55e;
+.range-price-item .range-icon {
+    font-size: 16px;
+    flex-shrink: 0;
 }
 
-.range-alert.info {
-    background: rgba(59, 130, 246, 0.15);
-    border-left-color: #3b82f6;
+.range-price-item .range-name {
+    font-weight: 600;
+    min-width: 70px;
 }
 
-.range-alert.caution {
-    background: rgba(251, 146, 60, 0.15);
-    border-left-color: #fb923c;
+.range-price-item .range-values {
+    font-family: 'Courier New', monospace;
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.range-alert.warning {
-    background: rgba(245, 158, 11, 0.15);
-    border-left-color: #f59e0b;
+.range-price-item.short {
+    color: rgba(239, 68, 68, 0.9);
 }
 
-.range-alert.danger {
-    background: rgba(239, 68, 68, 0.15);
-    border-left-color: #ef4444;
+.range-price-item.moderate {
+    color: rgba(245, 158, 11, 0.9);
 }
 
-.range-alert .alert-icon {
-    font-size: 2rem;
-    line-height: 1;
+.range-price-item.long {
+    color: rgba(16, 185, 129, 0.9);
 }
 
-.range-alert .alert-message {
-    flex: 1;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Price Controls */
+/* Simplified Price Controls (smaller, side by side) */
 .price-controls {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .price-control-group {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: 6px;
 }
 
 .price-control-group label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -3753,27 +3801,27 @@ body::before {
 .control-input {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 6px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: var(--border-radius);
-    padding: var(--spacing-xs);
+    padding: 4px;
     border: 1px solid rgba(168, 85, 247, 0.2);
     transition: all var(--transition-speed) ease;
 }
 
 .control-input:hover {
     border-color: rgba(168, 85, 247, 0.4);
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.15);
 }
 
 .control-btn {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     border: none;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
     color: white;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-speed) ease;
@@ -3784,8 +3832,8 @@ body::before {
 }
 
 .control-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+    transform: scale(1.08);
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.5);
 }
 
 .control-btn:active {
@@ -3801,12 +3849,12 @@ body::before {
     background: transparent;
     border: none;
     color: white;
-    font-size: 1.125rem;
+    font-size: 16px;
     font-weight: 600;
     font-family: 'Courier New', monospace;
     text-align: center;
     outline: none;
-    padding: var(--spacing-sm);
+    padding: 6px;
 }
 
 .price-input::-webkit-outer-spin-button,
@@ -3819,20 +3867,16 @@ body::before {
     -moz-appearance: textfield;
 }
 
-/* Chart Note */
+/* Simplified Chart Note */
 .chart-note {
-    background: rgba(168, 85, 247, 0.1);
-    border-left: 3px solid var(--primary-purple);
-    padding: var(--spacing-md);
+    background: rgba(168, 85, 247, 0.08);
+    border-left: 2px solid var(--primary-purple);
+    padding: 10px 12px;
     border-radius: var(--border-radius);
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.chart-note strong {
-    color: var(--primary-purple);
-    font-weight: 600;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.65);
+    text-align: center;
 }
 
 /* Responsive Adjustments */
@@ -3844,6 +3888,7 @@ body::before {
     .chart-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: var(--spacing-sm);
     }
 
     .current-price-display {
@@ -3856,20 +3901,28 @@ body::before {
     }
 
     .chart-container {
-        height: 300px;
+        height: 250px;
+    }
+
+    .range-prices-compact {
+        font-size: 13px;
     }
 
     .price-controls {
         grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
     }
 
     .range-alert {
-        flex-direction: column;
-        text-align: center;
+        padding: 10px;
     }
 
     .range-alert .alert-icon {
-        font-size: 2.5rem;
+        font-size: 20px;
+    }
+
+    .range-alert .alert-message {
+        font-size: 12px;
     }
 }
 
@@ -3879,7 +3932,7 @@ body::before {
     }
 
     .chart-header h3 {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
     }
 
     .current-price-display .price-value {
@@ -3887,23 +3940,46 @@ body::before {
     }
 
     .chart-container {
-        height: 250px;
+        height: 220px;
         padding: var(--spacing-sm);
+    }
+
+    .range-prices-compact {
+        font-size: 12px;
+        padding: var(--spacing-sm);
+    }
+
+    .range-price-item .range-icon {
+        font-size: 14px;
+    }
+
+    .range-price-item .range-name {
+        min-width: 60px;
     }
 
     .control-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 1.125rem;
+        width: 26px;
+        height: 26px;
+        font-size: 0.95rem;
     }
 
     .price-input {
-        font-size: 1rem;
+        font-size: 14px;
     }
 
     .range-alert {
-        padding: var(--spacing-sm);
+        padding: 8px;
     }
+
+    .range-alert .alert-message {
+        font-size: 11px;
+    }
+
+    .chart-note {
+        font-size: 0.75rem;
+        padding: 8px 10px;
+    }
+}
 
     .range-alert .alert-message {
         font-size: 0.875rem;
