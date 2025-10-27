@@ -3582,3 +3582,335 @@ body::before {
         font-size: 13px;
     }
 }
+
+/* ===========================
+   PRICE CHART SECTION
+   ========================== */
+
+.price-chart-section {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all var(--transition-speed) ease;
+}
+
+.price-chart-section:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15);
+    transform: translateY(-2px);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.chart-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.current-price-display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-xs);
+}
+
+.current-price-display .price-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.current-price-display .price-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    color: var(--primary-purple);
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+.current-price-display .price-pair {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.chart-container canvas {
+    max-height: 100%;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Range Alert Box */
+.range-alert {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-lg);
+    border-left: 4px solid;
+    backdrop-filter: blur(10px);
+    animation: slideInDown 0.4s ease;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.range-alert.safe {
+    background: rgba(34, 197, 94, 0.15);
+    border-left-color: #22c55e;
+}
+
+.range-alert.info {
+    background: rgba(59, 130, 246, 0.15);
+    border-left-color: #3b82f6;
+}
+
+.range-alert.caution {
+    background: rgba(251, 146, 60, 0.15);
+    border-left-color: #fb923c;
+}
+
+.range-alert.warning {
+    background: rgba(245, 158, 11, 0.15);
+    border-left-color: #f59e0b;
+}
+
+.range-alert.danger {
+    background: rgba(239, 68, 68, 0.15);
+    border-left-color: #ef4444;
+}
+
+.range-alert .alert-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.range-alert .alert-message {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Price Controls */
+.price-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.price-control-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.price-control-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.control-input {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    transition: all var(--transition-speed) ease;
+}
+
+.control-input:hover {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+}
+
+.control-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-pink));
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.control-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+.control-btn.minus {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.8), rgba(236, 72, 153, 0.8));
+}
+
+.price-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    outline: none;
+    padding: var(--spacing-sm);
+}
+
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.price-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Chart Note */
+.chart-note {
+    background: rgba(168, 85, 247, 0.1);
+    border-left: 3px solid var(--primary-purple);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.chart-note strong {
+    color: var(--primary-purple);
+    font-weight: 600;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .price-chart-section {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .current-price-display {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .current-price-display .price-value {
+        font-size: 1.5rem;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    .price-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .range-alert {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .range-alert .alert-icon {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .price-chart-section {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .chart-header h3 {
+        font-size: 1.25rem;
+    }
+
+    .current-price-display .price-value {
+        font-size: 1.25rem;
+    }
+
+    .chart-container {
+        height: 250px;
+        padding: var(--spacing-sm);
+    }
+
+    .control-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.125rem;
+    }
+
+    .price-input {
+        font-size: 1rem;
+    }
+
+    .range-alert {
+        padding: var(--spacing-sm);
+    }
+
+    .range-alert .alert-message {
+        font-size: 0.875rem;
+    }
+
+    .chart-note {
+        font-size: 0.8125rem;
+        padding: var(--spacing-sm);
+    }
+}

@@ -484,6 +484,60 @@
                     </div>
                 </div>
 
+                <!-- Price Range Chart Section -->
+                <div class="price-chart-section">
+                    <div class="chart-header">
+                        <h3 class="subsection-title">📊
+                            <span data-i18n="poolAnalyzer.chart.title">Range Visualization</span>
+                        </h3>
+                        <div class="current-price-display">
+                            <span class="price-label">Current Price:</span>
+                            <span class="price-value" id="currentPriceChart"></span>
+                            <span class="price-pair" id="pricePairChart"></span>
+                        </div>
+                    </div>
+
+                    <!-- Chart Canvas -->
+                    <div class="chart-container">
+                        <canvas id="rangeChart"></canvas>
+                    </div>
+
+                    <!-- Range Position Alert -->
+                    <div class="range-alert" id="rangeAlert" style="display: none;">
+                        <div class="alert-icon"></div>
+                        <div class="alert-message"></div>
+                    </div>
+
+                    <!-- Price Controls -->
+                    <div class="price-controls">
+                        <div class="price-control-group">
+                            <label>Min Price</label>
+                            <div class="control-input">
+                                <button class="control-btn minus" data-target="minPrice">-</button>
+                                <input type="number" id="minPrice" class="price-input" step="0.0001" readonly>
+                                <button class="control-btn plus" data-target="minPrice">+</button>
+                            </div>
+                            <div class="control-label" id="minPriceLabel"></div>
+                        </div>
+
+                        <div class="price-control-group">
+                            <label>Max Price</label>
+                            <div class="control-input">
+                                <button class="control-btn minus" data-target="maxPrice">-</button>
+                                <input type="number" id="maxPrice" class="price-input" step="0.0001" readonly>
+                                <button class="control-btn plus" data-target="maxPrice">+</button>
+                            </div>
+                            <div class="control-label" id="maxPriceLabel"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-note">
+                        💡 <span data-i18n="poolAnalyzer.chart.note">
+                            Adjust Min/Max prices to see how ranges change. Colored lines show limits for each strategy.
+                        </span>
+                    </div>
+                </div>
+
                 <!-- Key Metrics Grid -->
                 <div class="metrics-grid">
                     <div class="metric-card">
@@ -898,6 +952,7 @@
 
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
 
     <!-- Application Scripts -->
     <script src="js/api.js"></script>

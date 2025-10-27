@@ -572,6 +572,119 @@ class PoolAnalyzer {
         return names[strategy][currentLang];
     }
 
+    /**
+     * Fetch historical price data from CoinGecko
+     * Falls back to current price if token not found
+     */
+    async fetchHistoricalPrices(coinSymbol, days = 7) {
+        try {
+            // Try to find coin ID by symbol
+            const searchUrl = `https://api.coingecko.com/api/v3/search?query=${coinSymbol}`;
+            const searchResponse = await fetch(searchUrl);
+            const searchData = await searchResponse.json();
+
+            if (!searchData.coins || searchData.coins.length === 0) {
+                console.log(`Token ${coinSymbol} not found on CoinGecko`);
+                return null;
+            }
+
+            const coinId = searchData.coins[0].id;
+
+            // Fetch market chart
+            const chartUrl = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}&interval=daily`;
+            const chartResponse = await fetch(chartUrl);
+
+            if (!chartResponse.ok) {
+                throw new Error('Failed to fetch chart data');
+            }
+
+            const chartData = await chartResponse.json();
+
+            // Format data: array of {timestamp, price}
+            return chartData.prices.map(([timestamp, price]) => ({
+                timestamp: timestamp,
+                date: new Date(timestamp),
+                price: price
+            }));
+
+        } catch (error) {
+            console.error('Error fetching historical prices:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Analyze price position relative to ranges
+     * Returns alert level and message
+     */
+    analyzePricePosition(currentPrice, ranges) {
+        const inShort = currentPrice >= ranges.short.min && currentPrice <= ranges.short.max;
+        const inModerate = currentPrice >= ranges.moderate.min && currentPrice <= ranges.moderate.max;
+        const inLong = currentPrice >= ranges.long.min && currentPrice <= ranges.long.max;
+
+        // Calculate distance from ranges
+        const distanceFromShortMin = ((currentPrice - ranges.short.min) / ranges.short.min) * 100;
+        const distanceFromShortMax = ((ranges.short.max - currentPrice) / ranges.short.max) * 100;
+        const distanceFromLongMin = ((currentPrice - ranges.long.min) / ranges.long.min) * 100;
+        const distanceFromLongMax = ((ranges.long.max - currentPrice) / ranges.long.max) * 100;
+
+        if (!inLong) {
+            return {
+                level: 'danger',
+                icon: '🚨',
+                message: {
+                    pt: `ALERTA: Preço fora de todos os ranges! Aguarde correção ou ajuste manualmente.`,
+                    en: `ALERT: Price outside all ranges! Wait for correction or adjust manually.`
+                }
+            };
+        }
+
+        if (!inModerate && inLong) {
+            const nearEdge = Math.min(Math.abs(distanceFromLongMin), Math.abs(distanceFromLongMax)) < 5;
+            if (nearEdge) {
+                return {
+                    level: 'warning',
+                    icon: '⚠️',
+                    message: {
+                        pt: `Atenção: Preço próximo aos limites do range longo. Monitore para possível ajuste.`,
+                        en: `Warning: Price near long range limits. Monitor for possible adjustment.`
+                    }
+                };
+            }
+        }
+
+        if (!inShort && inModerate) {
+            return {
+                level: 'caution',
+                icon: '⚠️',
+                message: {
+                    pt: `Preço saiu do range curto mas está no moderado. Considere rebalancear se busca máxima eficiência.`,
+                    en: `Price exited short range but within moderate. Consider rebalancing for maximum efficiency.`
+                }
+            };
+        }
+
+        if (inShort) {
+            return {
+                level: 'safe',
+                icon: '✅',
+                message: {
+                    pt: `Preço seguro dentro de todos os ranges. Ótimo momento para entrar ou manter posição.`,
+                    en: `Price safely within all ranges. Good time to enter or maintain position.`
+                }
+            };
+        }
+
+        return {
+            level: 'info',
+            icon: '📊',
+            message: {
+                pt: `Preço dentro do range moderado. Boa posição para maioria das estratégias.`,
+                en: `Price within moderate range. Good position for most strategies.`
+            }
+        };
+    }
+
     // Cache helpers
     getCached(key) {
         const cached = this.cache.get(key);
