@@ -864,7 +864,7 @@ function setupPoolAnalyzer() {
     });
 
     // Quick example buttons
-    const quickExamples = document.querySelectorAll('.quick-example');
+    const quickExamples = document.querySelectorAll('.example-btn');
     quickExamples.forEach(example => {
         example.addEventListener('click', () => {
             const address = example.dataset.address;
@@ -872,6 +872,9 @@ function setupPoolAnalyzer() {
 
             if (address) poolInput.value = address;
             if (network) networkSelect.value = network;
+
+            // Auto-trigger analysis
+            setTimeout(() => analyzeBtn.click(), 100);
         });
     });
 
@@ -1131,7 +1134,18 @@ function updateAPRs(aprs, feeTier) {
     // Annual APR
     const annualEl = document.getElementById('annualAPR');
     if (annualEl) {
-        annualEl.textContent = aprs.annual.toFixed(2) + '%';
+        let aprText = aprs.annual.toFixed(2) + '%';
+
+        // Add warning if APR is suspiciously high
+        if (aprs.warning && aprs.annual > 500) {
+            aprText += ' ⚠️';
+            const warningNote = currentLang === 'pt'
+                ? '<br><small style="color: #f59e0b; font-size: 11px;">APR muito alto - verifique dados</small>'
+                : '<br><small style="color: #f59e0b; font-size: 11px;">Very high APR - verify data</small>';
+            annualEl.innerHTML = aprText + warningNote;
+        } else {
+            annualEl.textContent = aprText;
+        }
     }
 }
 
@@ -1346,21 +1360,24 @@ function renderRangeChart(historicalData, currentPrice, ranges, baseToken, quote
                             backgroundColor: 'rgba(239, 68, 68, 0.12)',
                             borderWidth: 0
                         },
-                        // Current Price Line (bright purple with label) - ONLY line shown
+                        // Current Price Line (bright purple with label + glow) - ONLY line shown
                         currentPrice: {
                             type: 'line',
                             yMin: currentPrice,
                             yMax: currentPrice,
-                            borderColor: '#a855f7',
-                            borderWidth: 3,
+                            borderColor: '#ec4899',
+                            borderWidth: 4,
+                            borderDash: [],
                             label: {
-                                content: `${currentLang === 'pt' ? 'Atual' : 'Current'}: $${currentPrice.toFixed(currentPrice < 1 ? 6 : 2)}`,
+                                content: `← ${currentLang === 'pt' ? 'Preço Atual' : 'Current Price'}: $${currentPrice.toFixed(currentPrice < 1 ? 6 : 2)}`,
                                 enabled: true,
-                                position: 'center',
-                                backgroundColor: 'rgba(168, 85, 247, 0.95)',
+                                position: 'start',
+                                backgroundColor: 'rgba(236, 72, 153, 0.95)',
                                 color: '#fff',
-                                font: { size: 11, weight: 'bold' },
-                                padding: 6
+                                font: { size: 14, weight: 'bold' },
+                                padding: 8,
+                                xAdjust: 10,
+                                borderRadius: 4
                             }
                         }
                     }

@@ -151,7 +151,7 @@ class PoolAnalyzer {
      */
     calculateAPRs(volume24h, liquidity, feeTier = 0.3) {
         if (!liquidity || liquidity === 0) {
-            return { daily: 0, monthly: 0, annual: 0, estimated: true };
+            return { daily: 0, monthly: 0, annual: 0, estimated: true, warning: true };
         }
 
         const feePerDay = volume24h * (feeTier / 100);
@@ -159,12 +159,27 @@ class PoolAnalyzer {
         const monthlyAPR = dailyAPR * 30;
         const annualAPR = dailyAPR * 365;
 
+        // Sanity check - warn if APR is suspiciously high
+        let warning = false;
+        if (annualAPR > 500) {
+            console.warn('APR suspiciously high, verify data:', {
+                volume24h,
+                liquidity,
+                feeTier,
+                feePerDay,
+                dailyAPR,
+                annualAPR
+            });
+            warning = true;
+        }
+
         return {
             daily: dailyAPR,
             monthly: monthlyAPR,
             annual: annualAPR,
             feeTier: feeTier,
-            estimated: true
+            estimated: true,
+            warning: warning
         };
     }
 

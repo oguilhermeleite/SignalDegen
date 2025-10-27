@@ -3386,7 +3386,7 @@ body::before {
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(0, 0, 0, 0.3));
     border: 2px solid rgba(168, 85, 247, 0.2);
     border-radius: 12px;
-    padding: 24px;
+    padding: 18px;
     margin-bottom: var(--spacing-lg);
     transition: all 0.3s ease;
 }
@@ -3443,7 +3443,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .range-emoji {
@@ -3469,8 +3469,8 @@ body::before {
     align-items: center;
     justify-content: center;
     gap: 16px;
-    margin: 24px 0;
-    padding: 20px;
+    margin: 16px 0;
+    padding: 16px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }
@@ -3492,11 +3492,11 @@ body::before {
     align-items: center;
     gap: 12px;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 .efficiency-icons {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .efficiency-label {
@@ -3508,8 +3508,8 @@ body::before {
 .range-details {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .detail-item {
