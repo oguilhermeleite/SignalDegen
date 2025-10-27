@@ -614,71 +614,156 @@
                 <div class="ranges-section">
                     <h3 class="subsection-title">🎯 <span data-i18n="poolAnalyzer.ranges.title">Strategic Price Ranges</span></h3>
 
-                    <div class="range-card short-range">
-                        <div class="range-header">
-                            <span class="range-icon">🔴</span>
-                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.short">Short Range</span> (<span id="shortPercent">±3%</span>)</span>
-                        </div>
-                        <div class="range-prices">
-                            <span class="range-min" id="shortMin"></span>
-                            <span class="range-separator">→</span>
-                            <span class="range-max" id="shortMax"></span>
-                        </div>
-                        <div class="range-observation" id="shortObservation">
-                            <!-- Contextual observation -->
+                    <!-- Educational Tooltip -->
+                    <div class="educational-tooltip">
+                        <div class="tooltip-icon">❓</div>
+                        <div class="tooltip-content">
+                            <strong data-i18n="poolAnalyzer.tooltip.title">O QUE É UM RANGE?</strong>
+                            <p data-i18n="poolAnalyzer.tooltip.content">
+                                Range é a faixa de preço onde sua liquidez trabalha.
+                                Quanto menor o range, mais taxas você ganha, mas precisa ajustar mais vezes.
+                            </p>
                         </div>
                     </div>
 
-                    <div class="range-card moderate-range">
-                        <div class="range-header">
-                            <span class="range-icon">🟡</span>
-                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.moderate">Moderate Range</span> (<span id="moderatePercent">±7%</span>)</span>
+                    <!-- Short Range Card -->
+                    <div class="range-card-improved short-range">
+                        <div class="range-card-header">
+                            <div class="range-title-row">
+                                <span class="range-emoji">🔴</span>
+                                <span class="range-name">
+                                    <span data-i18n="poolAnalyzer.ranges.short">RANGE CURTO</span>
+                                    <span class="range-percentage">(<span id="shortPercent">±3%</span>)</span>
+                                </span>
+                            </div>
                         </div>
-                        <div class="range-prices">
-                            <span class="range-min" id="moderateMin"></span>
-                            <span class="range-separator">→</span>
-                            <span class="range-max" id="moderateMax"></span>
+
+                        <div class="range-prices-large">
+                            <span class="price-min" id="shortMin"></span>
+                            <span class="price-arrow">──→</span>
+                            <span class="price-max" id="shortMax"></span>
                         </div>
-                        <div class="range-observation" id="moderateObservation">
-                            <!-- Contextual observation -->
+
+                        <div class="range-indicators">
+                            <span class="efficiency-icons">💰💰💰</span>
+                            <span class="efficiency-label" data-i18n="poolAnalyzer.ranges.shortEfficiency">Máxima eficiência</span>
+                        </div>
+
+                        <div class="range-details">
+                            <div class="detail-item">
+                                <span class="detail-icon">⚡</span>
+                                <span data-i18n="poolAnalyzer.ranges.shortAdjust">Ajustar: Semanalmente</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-icon">👤</span>
+                                <span data-i18n="poolAnalyzer.ranges.shortIdeal">Ideal para: Traders ativos</span>
+                            </div>
+                        </div>
+
+                        <div class="range-summary" id="shortSummary">
+                            <!-- Short bullet point summary -->
                         </div>
                     </div>
 
-                    <div class="range-card long-range">
-                        <div class="range-header">
-                            <span class="range-icon">🟢</span>
-                            <span class="range-title"><span data-i18n="poolAnalyzer.ranges.long">Long Range</span> (<span id="longPercent">±18%</span>)</span>
+                    <!-- Moderate Range Card -->
+                    <div class="range-card-improved moderate-range recommended">
+                        <div class="recommended-badge" data-i18n="poolAnalyzer.ranges.recommended">⭐ Recomendado</div>
+                        <div class="range-card-header">
+                            <div class="range-title-row">
+                                <span class="range-emoji">🟡</span>
+                                <span class="range-name">
+                                    <span data-i18n="poolAnalyzer.ranges.moderate">RANGE MODERADO</span>
+                                    <span class="range-percentage">(<span id="moderatePercent">±7%</span>)</span>
+                                </span>
+                            </div>
                         </div>
-                        <div class="range-prices">
-                            <span class="range-min" id="longMin"></span>
-                            <span class="range-separator">→</span>
-                            <span class="range-max" id="longMax"></span>
+
+                        <div class="range-prices-large">
+                            <span class="price-min" id="moderateMin"></span>
+                            <span class="price-arrow">──→</span>
+                            <span class="price-max" id="moderateMax"></span>
                         </div>
-                        <div class="range-observation" id="longObservation">
-                            <!-- Contextual observation -->
+
+                        <div class="range-indicators">
+                            <span class="efficiency-icons">💰💰</span>
+                            <span class="efficiency-label" data-i18n="poolAnalyzer.ranges.moderateEfficiency">Equilíbrio ideal</span>
+                        </div>
+
+                        <div class="range-details">
+                            <div class="detail-item">
+                                <span class="detail-icon">⚡</span>
+                                <span data-i18n="poolAnalyzer.ranges.moderateAdjust">Ajustar: Mensalmente</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-icon">👤</span>
+                                <span data-i18n="poolAnalyzer.ranges.moderateIdeal">Ideal para: Maioria dos usuários</span>
+                            </div>
+                        </div>
+
+                        <div class="range-summary" id="moderateSummary">
+                            <!-- Moderate bullet point summary -->
+                        </div>
+                    </div>
+
+                    <!-- Long Range Card -->
+                    <div class="range-card-improved long-range">
+                        <div class="range-card-header">
+                            <div class="range-title-row">
+                                <span class="range-emoji">🟢</span>
+                                <span class="range-name">
+                                    <span data-i18n="poolAnalyzer.ranges.long">RANGE LONGO</span>
+                                    <span class="range-percentage">(<span id="longPercent">±18%</span>)</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="range-prices-large">
+                            <span class="price-min" id="longMin"></span>
+                            <span class="price-arrow">──→</span>
+                            <span class="price-max" id="longMax"></span>
+                        </div>
+
+                        <div class="range-indicators">
+                            <span class="efficiency-icons">💰</span>
+                            <span class="efficiency-label" data-i18n="poolAnalyzer.ranges.longEfficiency">Mínimo esforço</span>
+                        </div>
+
+                        <div class="range-details">
+                            <div class="detail-item">
+                                <span class="detail-icon">⚡</span>
+                                <span data-i18n="poolAnalyzer.ranges.longAdjust">Ajustar: Raramente</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-icon">👤</span>
+                                <span data-i18n="poolAnalyzer.ranges.longIdeal">Ideal para: Investidor passivo</span>
+                            </div>
+                        </div>
+
+                        <div class="range-summary" id="longSummary">
+                            <!-- Long bullet point summary -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Important Notice -->
-                <div class="important-notice">
+                <!-- Compact Important Notice -->
+                <div class="important-notice-compact">
                     <div class="notice-icon">⚠️</div>
                     <div class="notice-content">
-                        <strong data-i18n="poolAnalyzer.important.title">Important:</strong>
-                        <p id="importantNotice"></p>
+                        <strong data-i18n="poolAnalyzer.important.title">Importante:</strong>
+                        <span id="importantNotice"></span>
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="results-actions">
-                    <button class="action-btn primary" id="copyAnalysisBtn">
-                        <span data-i18n="poolAnalyzer.actions.copy">📋 Copy Analysis</span>
+                <!-- Action Buttons -->
+                <div class="action-buttons-group">
+                    <button class="btn-primary" id="copyAnalysisBtn">
+                        <span data-i18n="poolAnalyzer.actions.copy">📋 Copiar Análise</span>
                     </button>
-                    <button class="action-btn secondary" id="viewOnDexBtn">
-                        <span data-i18n="poolAnalyzer.actions.goToPool">🔗 Go to Pool</span>
+                    <button class="btn-secondary" id="viewOnDexBtn">
+                        <span data-i18n="poolAnalyzer.actions.goToPool">🔗 Ir para Pool</span>
                     </button>
-                    <button class="action-btn" id="newAnalysisBtn">
-                        <span data-i18n="poolAnalyzer.actions.newAnalysis">🔄 New Analysis</span>
+                    <button class="btn-tertiary" id="newAnalysisBtn">
+                        <span data-i18n="poolAnalyzer.actions.newAnalysis">🔄 Nova Análise</span>
                     </button>
                 </div>
             </div>

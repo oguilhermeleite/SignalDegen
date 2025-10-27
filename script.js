@@ -132,12 +132,26 @@ const translations = {
                 monthly: 'APR Mensal',
                 annual: 'APR Anual'
             },
+            tooltip: {
+                title: 'O QUE É UM RANGE?',
+                content: 'Range é a faixa de preço onde sua liquidez trabalha. Quanto menor o range, mais taxas você ganha, mas precisa ajustar mais vezes.'
+            },
             ranges: {
                 title: 'Ranges Estratégicos',
                 subtitle: 'Sugestões de ranges de preço para provedores de liquidez',
-                short: 'Curto Prazo',
-                moderate: 'Moderado',
-                long: 'Longo Prazo',
+                short: 'RANGE CURTO',
+                moderate: 'RANGE MODERADO',
+                long: 'RANGE LONGO',
+                recommended: '⭐ Recomendado',
+                shortEfficiency: 'Máxima eficiência',
+                moderateEfficiency: 'Equilíbrio ideal',
+                longEfficiency: 'Mínimo esforço',
+                shortAdjust: 'Ajustar: Semanalmente',
+                moderateAdjust: 'Ajustar: Mensalmente',
+                longAdjust: 'Ajustar: Raramente',
+                shortIdeal: 'Ideal para: Traders ativos',
+                moderateIdeal: 'Ideal para: Maioria dos usuários',
+                longIdeal: 'Ideal para: Investidor passivo',
                 min: 'Mínimo',
                 max: 'Máximo'
             },
@@ -338,12 +352,26 @@ const translations = {
                 monthly: 'Monthly APR',
                 annual: 'Annual APR'
             },
+            tooltip: {
+                title: 'WHAT IS A RANGE?',
+                content: 'Range is the price band where your liquidity works. The narrower the range, the more fees you earn, but you need to adjust more often.'
+            },
             ranges: {
                 title: 'Strategic Ranges',
                 subtitle: 'Suggested price ranges for liquidity providers',
-                short: 'Short Term',
-                moderate: 'Moderate',
-                long: 'Long Term',
+                short: 'SHORT RANGE',
+                moderate: 'MODERATE RANGE',
+                long: 'LONG RANGE',
+                recommended: '⭐ Recommended',
+                shortEfficiency: 'Maximum efficiency',
+                moderateEfficiency: 'Ideal balance',
+                longEfficiency: 'Minimum effort',
+                shortAdjust: 'Adjust: Weekly',
+                moderateAdjust: 'Adjust: Monthly',
+                longAdjust: 'Adjust: Rarely',
+                shortIdeal: 'Ideal for: Active traders',
+                moderateIdeal: 'Ideal for: Most users',
+                longIdeal: 'Ideal for: Passive investor',
                 min: 'Min',
                 max: 'Max'
             },
@@ -1112,34 +1140,46 @@ function updateRanges(ranges, currentPrice, rangeObs) {
     const shortMinEl = document.getElementById('shortMin');
     const shortMaxEl = document.getElementById('shortMax');
     const shortPercentEl = document.getElementById('shortPercent');
-    const shortObsEl = document.getElementById('shortObservation');
+    const shortSummaryEl = document.getElementById('shortSummary');
 
     if (shortMinEl) shortMinEl.textContent = formatPoolPrice(ranges.short.min);
     if (shortMaxEl) shortMaxEl.textContent = formatPoolPrice(ranges.short.max);
     if (shortPercentEl) shortPercentEl.textContent = `±${ranges.short.percent.toFixed(1)}%`;
-    if (shortObsEl) shortObsEl.textContent = rangeObs.short;
+    if (shortSummaryEl) {
+        shortSummaryEl.textContent = currentLang === 'pt'
+            ? 'Máxima captura de taxas • Ajuste toda semana • Para quem monitora diariamente'
+            : 'Maximum fee capture • Adjust weekly • For daily monitors';
+    }
 
     // Moderate Range
     const modMinEl = document.getElementById('moderateMin');
     const modMaxEl = document.getElementById('moderateMax');
     const modPercentEl = document.getElementById('moderatePercent');
-    const modObsEl = document.getElementById('moderateObservation');
+    const modSummaryEl = document.getElementById('moderateSummary');
 
     if (modMinEl) modMinEl.textContent = formatPoolPrice(ranges.moderate.min);
     if (modMaxEl) modMaxEl.textContent = formatPoolPrice(ranges.moderate.max);
     if (modPercentEl) modPercentEl.textContent = `±${ranges.moderate.percent.toFixed(1)}%`;
-    if (modObsEl) modObsEl.textContent = rangeObs.moderate;
+    if (modSummaryEl) {
+        modSummaryEl.textContent = currentLang === 'pt'
+            ? 'Equilíbrio ideal • Ajuste mensal • Recomendado para maioria'
+            : 'Ideal balance • Adjust monthly • Recommended for most';
+    }
 
     // Long Range
     const longMinEl = document.getElementById('longMin');
     const longMaxEl = document.getElementById('longMax');
     const longPercentEl = document.getElementById('longPercent');
-    const longObsEl = document.getElementById('longObservation');
+    const longSummaryEl = document.getElementById('longSummary');
 
     if (longMinEl) longMinEl.textContent = formatPoolPrice(ranges.long.min);
     if (longMaxEl) longMaxEl.textContent = formatPoolPrice(ranges.long.max);
     if (longPercentEl) longPercentEl.textContent = `±${ranges.long.percent.toFixed(1)}%`;
-    if (longObsEl) longObsEl.textContent = rangeObs.long;
+    if (longSummaryEl) {
+        longSummaryEl.textContent = currentLang === 'pt'
+            ? 'Mínimo esforço • Raramente ajustar • Investidor passivo'
+            : 'Minimum effort • Rarely adjust • Passive investor';
+    }
 }
 
 function formatPoolPrice(price) {
@@ -1282,76 +1322,31 @@ function renderRangeChart(historicalData, currentPrice, ranges, baseToken, quote
                 },
                 annotation: {
                     annotations: {
-                        // Green zone (Long range)
+                        // Green zone (Long range) - shaded area only
                         longZone: {
                             type: 'box',
                             yMin: ranges.long.min,
                             yMax: ranges.long.max,
-                            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.12)',
                             borderWidth: 0
                         },
-                        // Yellow zone (Moderate range)
+                        // Yellow zone (Moderate range) - shaded area only
                         moderateZone: {
                             type: 'box',
                             yMin: ranges.moderate.min,
                             yMax: ranges.moderate.max,
-                            backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                            backgroundColor: 'rgba(245, 158, 11, 0.12)',
                             borderWidth: 0
                         },
-                        // Red zone (Short range)
+                        // Red zone (Short range) - shaded area only
                         shortZone: {
                             type: 'box',
                             yMin: ranges.short.min,
                             yMax: ranges.short.max,
-                            backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.12)',
                             borderWidth: 0
                         },
-                        // Long range boundaries (solid green lines)
-                        longMax: {
-                            type: 'line',
-                            yMin: ranges.long.max,
-                            yMax: ranges.long.max,
-                            borderColor: '#10b981',
-                            borderWidth: 2
-                        },
-                        longMin: {
-                            type: 'line',
-                            yMin: ranges.long.min,
-                            yMax: ranges.long.min,
-                            borderColor: '#10b981',
-                            borderWidth: 2
-                        },
-                        // Moderate range boundaries (solid yellow lines)
-                        moderateMax: {
-                            type: 'line',
-                            yMin: ranges.moderate.max,
-                            yMax: ranges.moderate.max,
-                            borderColor: '#f59e0b',
-                            borderWidth: 2
-                        },
-                        moderateMin: {
-                            type: 'line',
-                            yMin: ranges.moderate.min,
-                            yMax: ranges.moderate.min,
-                            borderColor: '#f59e0b',
-                            borderWidth: 2
-                        },
-                        // Short range boundaries (solid red lines)
-                        shortMax: {
-                            type: 'line',
-                            yMin: ranges.short.max,
-                            yMax: ranges.short.max,
-                            borderColor: '#ef4444',
-                            borderWidth: 2
-                        },
-                        shortMin: {
-                            type: 'line',
-                            yMin: ranges.short.min,
-                            yMax: ranges.short.min,
-                            borderColor: '#ef4444',
-                            borderWidth: 2
-                        },
-                        // Current Price Line (bright purple with label)
+                        // Current Price Line (bright purple with label) - ONLY line shown
                         currentPrice: {
                             type: 'line',
                             yMin: currentPrice,
