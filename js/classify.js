@@ -9,7 +9,7 @@ export const RULES = {
   minTvl: 100_000,
   minVol24h: 50_000,
   hot: { minTurnover: 1.0, volSpike: 1.5, limit: 12 },
-  moderate: { minTvl: 1_000_000, minTurnover: 0.1, maxTurnover: 1.0, minAgeDays: 30, aprStability: 0.4, limit: 12 },
+  moderate: { minTvl: 1_000_000, minTurnover: 0.1, maxTurnover: 1.0, minAgeDays: 30, aprStability: 0.4, maxPriceMove: 8, limit: 12 },
   aprAnomaly: 1000,
 };
 
@@ -51,7 +51,11 @@ export function isModerate(p) {
   const to = turnover(p);
   if (to < r.minTurnover || to > r.maxTurnover) return false;
   if (p.ageDays !== null && p.ageDays < r.minAgeDays) return false;
-  if (!isAprStable(p)) return false;
+  // Sem APR de 7d (ex.: Robinhood Chain via GeckoTerminal): exige preço calmo nas últimas 24h
+  const stable = p.apr7d !== null
+    ? isAprStable(p)
+    : p.priceChange24h !== null && Math.abs(p.priceChange24h) <= r.maxPriceMove;
+  if (!stable) return false;
   return isSolid(p.symbolA) || isSolid(p.symbolB);
 }
 
@@ -97,7 +101,8 @@ export function classify(pools) {
   const moderate = pools
     .filter((p) => !hotIds.has(p.id) && isModerate(p))
     .map(enrich)
-    .sort(sortBy('apr7d'))
+    .map((p) => ({ ...p, rankApr: p.apr7d ?? p.apr24h }))
+    .sort(sortBy('rankApr'))
     .slice(0, RULES.moderate.limit);
   return {
     hot,

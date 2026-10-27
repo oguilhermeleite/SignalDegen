@@ -12,6 +12,7 @@ import { DICT } from './i18n.js';
 const state = {
   lang: 'pt',
   tab: 'hot',
+  chain: 'solana',
   data: null, // { pools, status, updatedAt }
   groups: { hot: [], moderate: [] },
   analysis: null,
@@ -114,6 +115,7 @@ function toggleFav(pool) {
   } else {
     favs[pool.id] = {
       symbolA: pool.symbolA, symbolB: pool.symbolB, dex: pool.dex, dexLabel: pool.dexLabel,
+      chain: pool.chain || 'solana',
       lastApr: pool.apr24h ?? null, wasHot: state.groups.hot.some((p) => p.id === pool.id),
     };
     toast(t('fav.added'), 'success');
@@ -180,7 +182,10 @@ function checkFavAlerts() {
 async function loadRadar(force = false) {
   setStatus('loading');
   try {
-    state.data = await loadAllPools({ force });
+    const chain = state.chain;
+    const data = await loadAllPools({ force, chain });
+    if (chain !== state.chain) return; // usuário trocou de rede no meio do carregamento
+    state.data = data;
     const c = classify(state.data.pools);
     state.groups = { hot: c.hot, moderate: c.moderate };
     $('#statTotal').textContent = c.eligible.toLocaleString(locale());
@@ -219,6 +224,7 @@ function renderSources() {
   const el = $('#sources');
   if (!state.data) { el.innerHTML = ''; return; }
   const names = { raydium: 'Raydium', meteora: 'Meteora', gecko: 'GeckoTerminal' };
+  $$('.chain-btn').forEach((b) => b.classList.toggle('active', b.dataset.chain === state.chain));
   el.innerHTML = Object.entries(state.data.status)
     .map(([k, s]) => `<span class="source-chip ${s}" title="${esc(t('source.' + s))}">${s === 'ok' ? '✓' : s === 'loading' ? '…' : '✕'} ${names[k]}</span>`)
     .join('');
@@ -229,7 +235,7 @@ function filteredList() {
   if (state.tab === 'favorites') {
     const favs = getFavs();
     const byId = new Map((state.data?.pools || []).map((p) => [p.id, p]));
-    list = Object.entries(favs).map(([id, f]) => {
+    list = Object.entries(favs).filter(([, f]) => (f.chain || 'solana') === state.chain).map(([id, f]) => {
       const p = byId.get(id);
       return p ? { ...p, score: scorePool(p), risk: riskLevel(p) } : { id, ...f, missing: true };
     });
@@ -561,11 +567,11 @@ function drawChart() {
     ...band(r.long.min, r.long.max, 'rgba(16,185,129,0.13)'),
     ...band(r.moderate.min, r.moderate.max, 'rgba(245,158,11,0.18)'),
     ...band(r.short.min, r.short.max, 'rgba(239,68,68,0.22)'),
-    { data: flat(a.custom.min), borderColor: '#c084fc', borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false },
-    { data: flat(a.custom.max), borderColor: '#c084fc', borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false },
+    { data: flat(a.custom.min), borderColor: '#a6e10f', borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false },
+    { data: flat(a.custom.max), borderColor: '#a6e10f', borderDash: [6, 4], borderWidth: 1.5, pointRadius: 0, fill: false },
     {
-      data: hist.map((c) => c.close), borderColor: '#f472b6', borderWidth: 2.5, tension: 0.3, fill: false,
-      pointRadius: hist.map((_, i) => (i === hist.length - 1 ? 5 : 0)), pointBackgroundColor: '#fff',
+      data: hist.map((c) => c.close), borderColor: '#ffffff', borderWidth: 2.5, tension: 0.3, fill: false,
+      pointRadius: hist.map((_, i) => (i === hist.length - 1 ? 5 : 0)), pointBackgroundColor: '#a6e10f',
     },
   ];
   const lows = [r.long.min, ...hist.map((c) => c.close)];
@@ -588,11 +594,11 @@ function drawChart() {
         },
       },
       scales: {
-        x: { ticks: { color: '#a5b4fc', maxTicksLimit: 6, font: { size: 10 } }, grid: { display: false } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 6, font: { size: 10 } }, grid: { display: false } },
         y: {
           suggestedMin: Math.min(...lows) - pad, suggestedMax: Math.max(...highs) + pad,
-          ticks: { color: '#a5b4fc', font: { size: 10 }, callback: (v) => fmtPrice(v) },
-          grid: { color: 'rgba(168,85,247,0.08)' },
+          ticks: { color: '#94a3b8', font: { size: 10 }, callback: (v) => fmtPrice(v) },
+          grid: { color: 'rgba(255,255,255,0.06)' },
         },
       },
     },
@@ -691,6 +697,15 @@ function bind() {
   $('#refreshBtn').addEventListener('click', () => loadRadar(true));
 
   $$('.tab').forEach((b) => b.addEventListener('click', () => { state.tab = b.dataset.tab; renderRadar(); }));
+  $$('.chain-btn').forEach((b) => b.addEventListener('click', () => {
+    if (state.chain === b.dataset.chain) return;
+    state.chain = b.dataset.chain;
+    store.set('sd:chain', state.chain);
+    state.data = null;
+    state.groups = { hot: [], moderate: [] };
+    renderRadar();
+    loadRadar();
+  }));
   ['#searchInput', '#dexFilter', '#tvlFilter'].forEach((s) => $(s).addEventListener('input', renderRadar));
 
   $('#poolGrid').addEventListener('click', (e) => {
@@ -700,9 +715,10 @@ function bind() {
     const pool = state.data?.pools.find((p) => p.id === id) || { id, ...getFavs()[id] };
     if (btn.dataset.act === 'fav') toggleFav(pool);
     if (btn.dataset.act === 'analyze') {
+      const chain = pool.chain || state.chain;
       $('#poolInput').value = id;
-      $('#networkSelect').value = 'solana';
-      analyze(id, 'solana');
+      $('#networkSelect').value = chain;
+      analyze(id, chain);
     }
   });
 
@@ -725,7 +741,7 @@ function bind() {
       }
     }
     if (btn.dataset.act === 'fav-analysis') {
-      toggleFav({ id: a.id, symbolA: a.baseSymbol, symbolB: a.quoteSymbol, dex: a.dex, dexLabel: a.dexLabel, apr24h: a.apr24h });
+      toggleFav({ id: a.id, chain: a.network, symbolA: a.baseSymbol, symbolB: a.quoteSymbol, dex: a.dex, dexLabel: a.dexLabel, apr24h: a.apr24h });
     }
     if (btn.dataset.act === 'step') {
       const input = $(`#custom-${btn.dataset.k}`);
@@ -742,6 +758,7 @@ function bind() {
 // ---------- início ----------
 function init() {
   state.lang = store.get('sd:lang', 'pt') === 'en' ? 'en' : 'pt';
+  state.chain = store.get('sd:chain', 'solana') === 'robinhood' ? 'robinhood' : 'solana';
   applyI18n();
   updateBell();
   bind();

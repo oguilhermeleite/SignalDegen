@@ -11,8 +11,11 @@ export const ENDPOINTS = {
   meteoraList:
     'https://dlmm-api.meteora.ag/pair/all_with_pagination?page=0&limit=200&sort_key=volume&order_by=desc',
   meteoraPair: (addr) => `https://dlmm-api.meteora.ag/pair/${addr}`,
-  geckoTrending:
-    'https://api.geckoterminal.com/api/v2/networks/solana/trending_pools?include=base_token,quote_token,dex&page=1',
+  geckoTrending: (net = 'solana') =>
+    `https://api.geckoterminal.com/api/v2/networks/${net}/trending_pools?include=base_token,quote_token,dex&page=1`,
+  geckoTopPools: (net, page = 1) =>
+    `https://api.geckoterminal.com/api/v2/networks/${net}/pools?include=base_token,quote_token,dex&sort=h24_volume_usd_desc&page=${page}`,
+  geckoNetworks: (page) => `https://api.geckoterminal.com/api/v2/networks?page=${page}`,
   geckoPool: (net, addr) =>
     `https://api.geckoterminal.com/api/v2/networks/${net}/pools/${addr}?include=base_token,quote_token,dex`,
   geckoOhlcv: (net, addr, token) =>
@@ -24,7 +27,20 @@ export const STABLES = [
   'USDC', 'USDT', 'USDS', 'PYUSD', 'USDH', 'UXD', 'DAI', 'USDE', 'FDUSD', 'USD1', 'AUSD', 'USDG', 'USD*',
 ];
 // Pares considerados "sólidos": SOL, stablecoins e LSTs de SOL
-export const SOLID = ['SOL', 'WSOL', 'JITOSOL', 'MSOL', 'BSOL', 'JUPSOL', 'INF', 'BNSOL', ...STABLES];
+export const SOLID = [
+  'SOL', 'WSOL', 'JITOSOL', 'MSOL', 'BSOL', 'JUPSOL', 'INF', 'BNSOL',
+  'ETH', 'WETH', 'WBTC', 'CBBTC', ...STABLES,
+];
+
+// Redes suportadas. gecko = id da rede no GeckoTerminal; ds = id no DexScreener
+export const CHAINS = {
+  solana: { label: 'Solana', gecko: 'solana', ds: 'solana' },
+  robinhood: { label: 'Robinhood Chain', gecko: null, ds: 'robinhood', match: /robinhood/i },
+  eth: { label: 'Ethereum', gecko: 'eth', ds: 'ethereum' },
+  base: { label: 'Base', gecko: 'base', ds: 'base' },
+  arbitrum: { label: 'Arbitrum', gecko: 'arbitrum', ds: 'arbitrum' },
+  bsc: { label: 'BSC', gecko: 'bsc', ds: 'bsc' },
+};
 
 export const isStable = (sym) => STABLES.includes(String(sym || '').toUpperCase());
 export const isSolid = (sym) => SOLID.includes(String(sym || '').toUpperCase());
@@ -97,8 +113,32 @@ const ageFromDate = (d) => {
   return Number.isFinite(t) ? (Date.now() - t) / 86400000 : null;
 };
 
+/**
+ * Descobre o id da rede no GeckoTerminal pelo nome (ex.: Robinhood Chain).
+ * A lista de redes fica em cache por 24h.
+ */
+export async function geckoNetworkId(chain) {
+  const c = CHAINS[chain] || CHAINS.solana;
+  if (c.gecko) return c.gecko;
+  for (let page = 1; page <= 4; page++) {
+    try {
+      const json = await getJSON(ENDPOINTS.geckoNetworks(page), { ttl: 24 * 60 * 60 * 1000 });
+      const hit = (json.data || []).find((n) => c.match.test(n.attributes?.name || '') || c.match.test(n.id));
+      if (hit) {
+        c.gecko = hit.id;
+        return hit.id;
+      }
+      if (!json.data || json.data.length < 100) break;
+    } catch {
+      break;
+    }
+  }
+  return chain; // melhor palpite
+}
+
 // ---------- links ----------
-export function poolLink({ dex, id, isClmm }) {
+export function poolLink({ dex, id, isClmm, chain = 'solana' }) {
+  if (chain !== 'solana') return `https://dexscreener.com/${(CHAINS[chain] || {}).ds || chain}/${id}`;
   const d = String(dex || '').toLowerCase();
   if (d.startsWith('raydium')) {
     return isClmm || d.includes('clmm')
@@ -121,6 +161,7 @@ export function dexLabel(dex) {
   if (d.includes('meteora')) return 'Meteora DLMM';
   if (d.includes('orca')) return 'Orca';
   if (d.includes('pump')) return 'PumpSwap';
+  if (d.includes('uniswap')) return d.includes('v4') ? 'Uniswap v4' : d.includes('v3') ? 'Uniswap v3' : 'Uniswap';
   return dex ? dex.charAt(0).toUpperCase() + dex.slice(1) : '—';
 }
 
@@ -129,6 +170,7 @@ export function dexFamily(dex) {
   if (d.includes('raydium')) return 'raydium';
   if (d.includes('meteora')) return 'meteora';
   if (d.includes('orca')) return 'orca';
+  if (d.includes('uniswap')) return 'uniswap';
   return 'other';
 }
 
@@ -153,8 +195,9 @@ function makePool(o) {
     priceChange24h: o.priceChange24h ?? null,
     ageDays: o.ageDays ?? null,
     trending: !!o.trending,
+    chain: o.chain || 'solana',
     source: o.source,
-    url: poolLink({ dex: o.dex, id: o.id, isClmm: o.isClmm }),
+    url: poolLink({ dex: o.dex, id: o.id, isClmm: o.isClmm, chain: o.chain || 'solana' }),
   };
 }
 
@@ -221,7 +264,7 @@ function geckoTokenMap(json) {
   return map;
 }
 
-export function normalizeGecko(item, tokens = {}) {
+export function normalizeGecko(item, tokens = {}, { chain = 'solana', trending = true } = {}) {
   const at = item.attributes || {};
   const rel = item.relationships || {};
   const dex = rel.dex?.data?.id || '';
@@ -235,7 +278,7 @@ export function normalizeGecko(item, tokens = {}) {
   return makePool({
     id: at.address,
     dex,
-    isClmm: /clmm|dlmm|whirlpool|orca/i.test(dex),
+    isClmm: /clmm|dlmm|whirlpool|orca|v3|v4|slipstream|concentrated/i.test(dex),
     symbolA: baseTok.symbol || nameA,
     symbolB: quoteTok.symbol || nameB,
     feePct,
@@ -245,7 +288,8 @@ export function normalizeGecko(item, tokens = {}) {
     apr24h: aprFrom(fees24h, tvl),
     priceChange24h: num(at.price_change_percentage?.h24),
     ageDays: ageFromDate(at.pool_created_at),
-    trending: true,
+    trending,
+    chain,
     source: 'gecko',
   });
 }
@@ -255,13 +299,14 @@ export function normalizeGecko(item, tokens = {}) {
  * Busca pools de todas as fontes. Cada fonte é independente:
  * se uma falhar, as outras continuam. Retorna { pools, status }.
  */
-export async function loadAllPools({ force = false } = {}) {
+export async function loadAllPools({ force = false, chain = 'solana' } = {}) {
+  if (chain !== 'solana') return loadGeckoChain(chain, force);
   const status = { raydium: 'loading', meteora: 'loading', gecko: 'loading' };
 
   const [ray, met, gec] = await Promise.allSettled([
     getJSON(ENDPOINTS.raydiumList, { force }),
     getJSON(ENDPOINTS.meteoraList, { force }),
-    getJSON(ENDPOINTS.geckoTrending, { force }),
+    getJSON(ENDPOINTS.geckoTrending('solana'), { force }),
   ]);
 
   const byId = new Map();
@@ -319,7 +364,38 @@ export async function loadAllPools({ force = false } = {}) {
     status.gecko = 'error';
   }
 
-  return { pools: [...byId.values()], status, updatedAt: Date.now() };
+  return { pools: [...byId.values()], status, updatedAt: Date.now(), chain };
+}
+
+/** Redes sem API nativa de DEX (ex.: Robinhood Chain): tudo via GeckoTerminal */
+async function loadGeckoChain(chain, force) {
+  const net = await geckoNetworkId(chain);
+  const results = await Promise.allSettled([
+    getJSON(ENDPOINTS.geckoTrending(net), { force }),
+    getJSON(ENDPOINTS.geckoTopPools(net, 1), { force }),
+    getJSON(ENDPOINTS.geckoTopPools(net, 2), { force }),
+  ]);
+  const byId = new Map();
+  results.forEach((r, i) => {
+    if (r.status !== 'fulfilled') return;
+    const tokens = geckoTokenMap(r.value);
+    for (const item of r.value?.data || []) {
+      try {
+        const n = normalizeGecko(item, tokens, { chain, trending: i === 0 });
+        if (!n.id) continue;
+        const prev = byId.get(n.id);
+        if (prev) prev.trending = prev.trending || n.trending;
+        else byId.set(n.id, n);
+      } catch { /* ignora */ }
+    }
+  });
+  const ok = results.some((r) => r.status === 'fulfilled');
+  return {
+    pools: [...byId.values()],
+    status: { gecko: ok ? (byId.size ? 'ok' : 'empty') : 'error' },
+    updatedAt: Date.now(),
+    chain,
+  };
 }
 
 // ---------- dados de uma pool (Analisador) ----------
@@ -329,10 +405,12 @@ export async function loadAllPools({ force = false } = {}) {
  */
 export async function loadPoolDetail(address, network = 'solana') {
   const out = { id: address, network, warnings: [] };
+  const geckoNet = await geckoNetworkId(network);
+  const dsNet = (CHAINS[network] || {}).ds || network;
 
   // 1) GeckoTerminal
   try {
-    const json = await getJSON(ENDPOINTS.geckoPool(network, address), { ttl: 2 * 60 * 1000 });
+    const json = await getJSON(ENDPOINTS.geckoPool(geckoNet, address), { ttl: 2 * 60 * 1000 });
     const tokens = geckoTokenMap(json);
     const item = json.data;
     const at = item.attributes || {};
@@ -362,7 +440,7 @@ export async function loadPoolDetail(address, network = 'solana') {
   // 2) DexScreener como reserva
   if (!out.source) {
     try {
-      const json = await getJSON(ENDPOINTS.dexscreenerPair(network, address), { ttl: 2 * 60 * 1000 });
+      const json = await getJSON(ENDPOINTS.dexscreenerPair(dsNet, address), { ttl: 2 * 60 * 1000 });
       const p = json.pair || (json.pairs && json.pairs[0]);
       if (!p) throw new Error('not found');
       Object.assign(out, {
@@ -426,7 +504,7 @@ export async function loadPoolDetail(address, network = 'solana') {
     }
   }
 
-  if (out.isClmm === undefined) out.isClmm = /clmm|dlmm|whirlpool|orca/i.test(out.dex);
+  if (out.isClmm === undefined) out.isClmm = /clmm|dlmm|whirlpool|orca|v3|v4|slipstream|concentrated/i.test(out.dex);
 
   // Taxa ainda desconhecida: não inventamos APR
   out.feeKnown = out.feePct !== null && out.feePct !== undefined;
@@ -435,14 +513,15 @@ export async function loadPoolDetail(address, network = 'solana') {
   }
 
   out.dexLabel = dexLabel(out.dex);
-  out.url = poolLink({ dex: out.dex, id: address, isClmm: out.isClmm });
-  out.chartUrl = `https://www.geckoterminal.com/${network}/pools/${address}`;
+  out.url = poolLink({ dex: out.dex, id: address, isClmm: out.isClmm, chain: network });
+  out.chartUrl = `https://www.geckoterminal.com/${geckoNet}/pools/${address}`;
   return out;
 }
 
 /** Preço histórico (7 dias, velas de 4h) no par: volátil em unidades do outro token. */
 export async function loadPriceHistory(address, network, priceToken = 'base') {
-  const json = await getJSON(ENDPOINTS.geckoOhlcv(network, address, priceToken), { ttl: 10 * 60 * 1000 });
+  const net = await geckoNetworkId(network);
+  const json = await getJSON(ENDPOINTS.geckoOhlcv(net, address, priceToken), { ttl: 10 * 60 * 1000 });
   const list = json?.data?.attributes?.ohlcv_list || [];
   // formato: [timestamp, open, high, low, close, volume] — vem do mais novo pro mais antigo
   return list
