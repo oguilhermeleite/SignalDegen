@@ -1,1074 +1,192 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SignalDegen - Sinais inteligentes de criptomoedas para traders ousados">
-    <title>SignalDegen 🚀 - Sinais Inteligentes de Cripto</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SignalDegen — radar de pools de liquidez na Solana: pools quentes, pools moderadas e análise de ranges com dados reais.">
+  <title>SignalDegen — Radar de Pools</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <!-- Header -->
-    <header class="header" id="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <span class="logo-icon">📡</span>
-                    <span class="logo-text">SignalDegen</span>
-                </div>
-
-                <nav class="nav" id="nav">
-                    <a href="#home" class="nav-link" data-i18n="nav.home">Home</a>
-                    <a href="#safe-signals" class="nav-link" data-i18n="nav.safe">Safe Signals</a>
-                    <a href="#degen-zone" class="nav-link" data-i18n="nav.degen">Degen Zone</a>
-                    <a href="#pool-analyzer" class="nav-link" data-i18n="nav.poolAnalyzer">Pool Analyzer</a>
-                    <a href="#backtesting" class="nav-link" data-i18n="nav.backtesting">Backtesting</a>
-                    <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
-                </nav>
-
-                <div class="header-right">
-                    <div class="language-switcher">
-                        <button class="flag-btn active" data-lang="pt" aria-label="Português">🇧🇷</button>
-                        <button class="flag-btn" data-lang="en" aria-label="English">🇺🇸</button>
-                    </div>
-                    <button class="hamburger" id="hamburger" aria-label="Menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-row">
+      <a href="#home" class="logo"><span class="logo-icon">📡</span><span class="logo-text">SignalDegen</span></a>
+      <nav class="nav" id="nav">
+        <a href="#radar" class="nav-link" data-i18n="nav.radar">Radar</a>
+        <a href="#analyzer" class="nav-link" data-i18n="nav.analyzer">Analisador</a>
+        <a href="#how" class="nav-link" data-i18n="nav.how">Como funciona</a>
+      </nav>
+      <div class="header-right">
+        <button class="icon-btn" id="bellBtn" data-i18n-title="notify.toggle" title="Alertas">🔔</button>
+        <div class="lang">
+          <button class="flag-btn" data-lang="pt" aria-label="Português">🇧🇷</button>
+          <button class="flag-btn" data-lang="en" aria-label="English">🇺🇸</button>
         </div>
-    </header>
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      </div>
+    </div>
+  </header>
 
-    <!-- Hero Section -->
+  <main>
+    <!-- HERO -->
     <section class="hero" id="home">
-        <div class="hero-bg"></div>
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">SignalDegen 🚀</h1>
-                <p class="hero-subtitle" data-i18n="hero.subtitle">Sinais Inteligentes pra Quem Não Tem Medo</p>
-                <p class="hero-description" data-i18n="hero.description">Advanced technical analysis + High-risk opportunities in real-time</p>
-
-                <div class="hero-buttons">
-                    <a href="#safe-signals" class="btn btn-primary" data-i18n="hero.btn_signals">View Signals Now</a>
-                    <a href="#about" class="btn btn-outline" data-i18n="hero.btn_learn">Learn More</a>
-                </div>
-
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-icon">📊</span>
-                        <span class="stat-text" data-i18n="hero.stat1">500+ Signals/Day</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-icon">🎯</span>
-                        <span class="stat-text" data-i18n="hero.stat2">78% Win Rate</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-icon">⚡</span>
-                        <span class="stat-text" data-i18n="hero.stat3">Real-Time</span>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Solana • Dados ao vivo</p>
+        <h1 class="hero-title">
+          <span data-i18n="hero.title1">Radar de</span>
+          <span class="grad" data-i18n="hero.title2">Pools de Liquidez</span>
+        </h1>
+        <p class="hero-sub" data-i18n="hero.sub">Encontre as pools mais quentes do momento e as mais estáveis para trabalhar com calma — com taxas, APR e ranges calculados a partir de dados reais.</p>
+        <div class="hero-cta">
+          <a href="#radar" class="btn btn-primary" data-i18n="hero.ctaRadar">🔥 Ver pools agora</a>
+          <a href="#analyzer" class="btn btn-ghost" data-i18n="hero.ctaAnalyze">🔍 Analisar uma pool</a>
         </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-value" id="statTotal">—</span><span class="stat-label" data-i18n="hero.statTotal">pools monitoradas</span></div>
+          <div class="stat"><span class="stat-value" id="statHot">—</span><span class="stat-label" data-i18n="hero.statHot">quentes agora</span></div>
+          <div class="stat"><span class="stat-value" id="statModerate">—</span><span class="stat-label" data-i18n="hero.statModerate">moderadas</span></div>
+        </div>
+      </div>
     </section>
 
-    <!-- Safe Signals Section -->
-    <section class="safe-signals" id="safe-signals">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="title-icon">🟢</span>
-                    <span data-i18n="safe.title">SAFE SIGNALS - Signals Based on Solid Technical Analysis</span>
-                </h2>
-            </div>
-
-            <div class="signals-grid">
-                <!-- Signal Card 1 -->
-                <div class="signal-card">
-                    <div class="card-header">
-                        <h3 class="pair">BTC/USDT</h3>
-                        <div class="score-badge pulse">
-                            <span class="score-label" data-i18n="common.score">Score</span>
-                            <span class="score-value">85</span>
-                        </div>
-                    </div>
-                    <div class="signal-type strong-buy" data-i18n="signals.strong_buy">STRONG BUY</div>
-                    <div class="price-info">
-                        <span class="price mono">$43,250</span>
-                        <span class="change positive mono">+3.5%</span>
-                    </div>
-                    <div class="indicators">
-                        <div class="indicator">
-                            <span class="indicator-label">RSI:</span>
-                            <span class="indicator-value mono">65</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label">MACD:</span>
-                            <span class="indicator-value" data-i18n="indicators.bullish">Bullish</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
-                            <span class="indicator-value mono">+125%</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="timeframe">1h</span>
-                        <span class="updated" data-i18n="common.updated">Updated 2min ago</span>
-                    </div>
-                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
-                </div>
-
-                <!-- Signal Card 2 -->
-                <div class="signal-card">
-                    <div class="card-header">
-                        <h3 class="pair">ETH/USDT</h3>
-                        <div class="score-badge pulse">
-                            <span class="score-label" data-i18n="common.score">Score</span>
-                            <span class="score-value">72</span>
-                        </div>
-                    </div>
-                    <div class="signal-type buy" data-i18n="signals.buy">BUY</div>
-                    <div class="price-info">
-                        <span class="price mono">$2,340</span>
-                        <span class="change positive mono">+2.1%</span>
-                    </div>
-                    <div class="indicators">
-                        <div class="indicator">
-                            <span class="indicator-label">RSI:</span>
-                            <span class="indicator-value mono">58</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label">EMA:</span>
-                            <span class="indicator-value" data-i18n="indicators.golden_cross">Golden Cross</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
-                            <span class="indicator-value mono">+85%</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="timeframe">4h</span>
-                        <span class="updated" data-i18n="common.updated">Updated 5min ago</span>
-                    </div>
-                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
-                </div>
-
-                <!-- Signal Card 3 -->
-                <div class="signal-card">
-                    <div class="card-header">
-                        <h3 class="pair">SOL/USDT</h3>
-                        <div class="score-badge pulse">
-                            <span class="score-label" data-i18n="common.score">Score</span>
-                            <span class="score-value">55</span>
-                        </div>
-                    </div>
-                    <div class="signal-type hold" data-i18n="signals.hold">HOLD</div>
-                    <div class="price-info">
-                        <span class="price mono">$98.50</span>
-                        <span class="change negative mono">-0.5%</span>
-                    </div>
-                    <div class="indicators">
-                        <div class="indicator">
-                            <span class="indicator-label">RSI:</span>
-                            <span class="indicator-value mono">50</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label">MACD:</span>
-                            <span class="indicator-value" data-i18n="indicators.flat">Flat</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
-                            <span class="indicator-value" data-i18n="indicators.normal">Normal</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="timeframe">1h</span>
-                        <span class="updated" data-i18n="common.updated">Updated 1min ago</span>
-                    </div>
-                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
-                </div>
-
-                <!-- Signal Card 4 -->
-                <div class="signal-card">
-                    <div class="card-header">
-                        <h3 class="pair">BNB/USDT</h3>
-                        <div class="score-badge pulse">
-                            <span class="score-label" data-i18n="common.score">Score</span>
-                            <span class="score-value">88</span>
-                        </div>
-                    </div>
-                    <div class="signal-type strong-buy" data-i18n="signals.strong_buy">STRONG BUY</div>
-                    <div class="price-info">
-                        <span class="price mono">$315.80</span>
-                        <span class="change positive mono">+5.2%</span>
-                    </div>
-                    <div class="indicators">
-                        <div class="indicator">
-                            <span class="indicator-label">RSI:</span>
-                            <span class="indicator-value mono">70</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label">MACD:</span>
-                            <span class="indicator-value" data-i18n="indicators.strong_bullish">Strong Bullish</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
-                            <span class="indicator-value mono">+200%</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="timeframe">15m</span>
-                        <span class="updated" data-i18n="common.updated">Updated 30s ago</span>
-                    </div>
-                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
-                </div>
-
-                <!-- Signal Card 5 -->
-                <div class="signal-card">
-                    <div class="card-header">
-                        <h3 class="pair">XRP/USDT</h3>
-                        <div class="score-badge pulse">
-                            <span class="score-label" data-i18n="common.score">Score</span>
-                            <span class="score-value">35</span>
-                        </div>
-                    </div>
-                    <div class="signal-type sell" data-i18n="signals.sell">SELL</div>
-                    <div class="price-info">
-                        <span class="price mono">$0.52</span>
-                        <span class="change negative mono">-4.8%</span>
-                    </div>
-                    <div class="indicators">
-                        <div class="indicator">
-                            <span class="indicator-label">RSI:</span>
-                            <span class="indicator-value mono">32</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label">MACD:</span>
-                            <span class="indicator-value" data-i18n="indicators.bearish">Bearish</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
-                            <span class="indicator-value mono">+150%</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="timeframe">1h</span>
-                        <span class="updated" data-i18n="common.updated">Updated 3min ago</span>
-                    </div>
-                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
-                </div>
-
-                <!-- Signal Card 6 -->
-                <div class="signal-card">
-                    <div class="card-header">
-                        <h3 class="pair">ADA/USDT</h3>
-                        <div class="score-badge pulse">
-                            <span class="score-label" data-i18n="common.score">Score</span>
-                            <span class="score-value">68</span>
-                        </div>
-                    </div>
-                    <div class="signal-type buy" data-i18n="signals.buy">BUY</div>
-                    <div class="price-info">
-                        <span class="price mono">$0.48</span>
-                        <span class="change positive mono">+1.8%</span>
-                    </div>
-                    <div class="indicators">
-                        <div class="indicator">
-                            <span class="indicator-label">RSI:</span>
-                            <span class="indicator-value mono">62</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label">BB:</span>
-                            <span class="indicator-value" data-i18n="indicators.bollinger">Bollinger</span>
-                        </div>
-                        <div class="indicator">
-                            <span class="indicator-label" data-i18n="common.volume">Volume:</span>
-                            <span class="indicator-value mono">+95%</span>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <span class="timeframe">4h</span>
-                        <span class="updated" data-i18n="common.updated">Updated 7min ago</span>
-                    </div>
-                    <button class="btn-analysis" data-i18n="common.view_analysis">View Analysis</button>
-                </div>
-            </div>
+    <!-- RADAR -->
+    <section class="section" id="radar">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title"><span data-i18n="radar.title1">Radar</span> <span class="grad" data-i18n="radar.title2">de Pools</span></h2>
+          <p class="section-sub" data-i18n="radar.sub">Atualiza sozinho a cada 5 minutos. Fontes: Raydium, Meteora e GeckoTerminal.</p>
         </div>
+
+        <div class="radar-bar">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="hot" role="tab">🔥 <span data-i18n="radar.tabHot">Quentes</span> <span class="tab-count" id="countHot">0</span></button>
+            <button class="tab" data-tab="moderate" role="tab">⚖️ <span data-i18n="radar.tabModerate">Moderadas</span> <span class="tab-count" id="countModerate">0</span></button>
+            <button class="tab" data-tab="favorites" role="tab">⭐ <span data-i18n="radar.tabFav">Favoritas</span> <span class="tab-count" id="countFav">0</span></button>
+          </div>
+          <div class="status">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText" data-i18n="radar.loading">Carregando…</span>
+            <button class="icon-btn small" id="refreshBtn" data-i18n-title="radar.refresh" title="Atualizar">↻</button>
+          </div>
+        </div>
+
+        <p class="tab-desc" id="tabDesc"></p>
+
+        <div class="filters">
+          <input type="search" id="searchInput" class="input" data-i18n-placeholder="radar.search" placeholder="Buscar token (ex.: SOL, JUP)">
+          <select id="dexFilter" class="input">
+            <option value="all" data-i18n="radar.allDex">Todas as DEXs</option>
+            <option value="raydium">Raydium</option>
+            <option value="meteora">Meteora</option>
+            <option value="orca">Orca</option>
+            <option value="other" data-i18n="radar.otherDex">Outras</option>
+          </select>
+          <select id="tvlFilter" class="input">
+            <option value="0" data-i18n="radar.anyTvl">Qualquer TVL</option>
+            <option value="500000">TVL ≥ $500K</option>
+            <option value="1000000">TVL ≥ $1M</option>
+            <option value="5000000">TVL ≥ $5M</option>
+          </select>
+        </div>
+
+        <div class="sources" id="sources"></div>
+
+        <div class="pool-grid" id="poolGrid"></div>
+      </div>
     </section>
 
-    <!-- Degen Zone Section -->
-    <section class="degen-zone" id="degen-zone">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="title-icon">🔥</span>
-                    <span data-i18n="degen.title">DEGEN ZONE - High-Risk Opportunities</span>
-                </h2>
-                <div class="warning-banner">
-                    <span class="warning-icon">⚠️</span>
-                    <span data-i18n="degen.warning">EXTREME RISK - Only invest what you can afford to lose</span>
-                </div>
-            </div>
-
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="gainers" data-i18n="degen.tab_gainers">Top Gainers 🚀</button>
-                <button class="tab-btn" data-tab="losers" data-i18n="degen.tab_losers">Top Losers 📉</button>
-                <button class="tab-btn" data-tab="high-volume" data-i18n="degen.tab_volume">High Volume 🔥</button>
-                <button class="tab-btn" data-tab="new-listings" data-i18n="degen.tab_new">New Listings ⭐</button>
-            </div>
-
-            <div class="tab-content active" id="gainers">
-                <div class="degen-grid">
-                    <!-- Cards will be dynamically loaded via API -->
-                </div>
-            </div>
-
-            <div class="tab-content" id="losers">
-                <div class="degen-grid">
-                    <!-- Cards will be dynamically loaded via API -->
-                </div>
-            </div>
-
-            <div class="tab-content" id="high-volume">
-                <div class="degen-grid">
-                    <!-- Cards will be dynamically loaded via API -->
-                </div>
-            </div>
-
-            <div class="tab-content" id="new-listings">
-                <div class="degen-grid">
-                    <!-- Degen Card 1 -->
-                    <div class="degen-card">
-                        <div class="degen-header">
-                            <span class="degen-tag" data-i18n="degen.new_listing">NEW LISTING</span>
-                            <span class="degen-icon">🚀</span>
-                        </div>
-                        <h3 class="degen-pair">PEPE2.0/USDT</h3>
-                        <div class="degen-info">
-                            <p class="degen-detail">
-                                <span data-i18n="degen.listed">Listed</span> 2h <span data-i18n="degen.on">on</span> Gate.io
-                            </p>
-                            <div class="price-movement">
-                                <span class="price-before mono">$0.00001</span>
-                                <span class="arrow">→</span>
-                                <span class="price-after mono">$0.000025</span>
-                                <span class="change-extreme positive mono">(+150%)</span>
-                            </div>
-                        </div>
-                        <div class="degen-metrics">
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.liquidity">Liquidity:</span>
-                                <span class="metric-value mono">$50K</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.holders">Holders:</span>
-                                <span class="metric-value mono">250</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.contract">Contract:</span>
-                                <span class="metric-value verified" data-i18n="degen.verified">Verified</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label" data-i18n="degen.honeypot">Honeypot:</span>
-                                <span class="metric-value unknown" data-i18n="degen.unknown">Unknown</span>
-                            </div>
-                        </div>
-                        <div class="risk-badge extreme" data-i18n="degen.risk_extreme">Risk: EXTREME</div>
-                    </div>
-                </div>
-            </div>
+    <!-- ANALYZER -->
+    <section class="section section-alt" id="analyzer">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title"><span data-i18n="an.title1">Analisador</span> <span class="grad" data-i18n="an.title2">de Pool</span></h2>
+          <p class="section-sub" data-i18n="an.sub">Cole o endereço de qualquer pool e veja taxa, APR, ranges sugeridos e quanto tempo o preço ficou dentro de cada range.</p>
         </div>
+
+        <form class="analyzer-form card" id="analyzerForm">
+          <label class="label" for="poolInput" data-i18n="an.addressLabel">Endereço da pool</label>
+          <div class="form-row">
+            <input id="poolInput" class="input mono" autocomplete="off" spellcheck="false" data-i18n-placeholder="an.addressPh" placeholder="Ex.: 3ucNos4NbumPLZNWztqGHNFFgkHeRMBQAVemeeomsUxv">
+            <select id="networkSelect" class="input">
+              <option value="solana">Solana</option>
+              <option value="eth">Ethereum</option>
+              <option value="base">Base</option>
+              <option value="arbitrum">Arbitrum</option>
+              <option value="bsc">BSC</option>
+            </select>
+            <button type="submit" class="btn btn-primary" id="analyzeBtn" data-i18n="an.analyze">Analisar</button>
+          </div>
+          <p class="hint" data-i18n="an.hint">Dica: no radar, o botão “Analisar” preenche isso para você.</p>
+        </form>
+
+        <div id="analysis" class="analysis" hidden></div>
+      </div>
     </section>
 
-    <!-- Pool Analyzer Section -->
-    <section class="pool-analyzer-section" id="pool-analyzer">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="title-icon">💧</span>
-                    <span data-i18n="poolAnalyzer.title">LIQUIDITY POOL ANALYZER</span>
-                </h2>
-                <p class="section-subtitle" data-i18n="poolAnalyzer.subtitle">Analyze Liquidity Pools from Any DEX</p>
-            </div>
-
-            <!-- Input Form -->
-            <div class="analyzer-input-card">
-                <div class="input-group">
-                    <label data-i18n="poolAnalyzer.labels.poolAddress">Pool Address / Pool ID</label>
-                    <input
-                        type="text"
-                        id="poolAddressInput"
-                        placeholder="Ex: 8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj"
-                        class="pool-input"
-                    />
-                </div>
-
-                <div class="input-row">
-                    <div class="input-group half">
-                        <label data-i18n="poolAnalyzer.labels.network">Network</label>
-                        <select id="networkSelect" class="pool-select">
-                            <option value="solana">Solana</option>
-                            <option value="ethereum">Ethereum</option>
-                            <option value="arbitrum">Arbitrum</option>
-                            <option value="base">Base</option>
-                            <option value="bsc">BSC</option>
-                            <option value="polygon">Polygon</option>
-                            <option value="avalanche">Avalanche</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group half">
-                        <label data-i18n="poolAnalyzer.labels.dex">DEX (Optional)</label>
-                        <select id="dexSelect" class="pool-select">
-                            <option value="">Auto-detect</option>
-                            <option value="raydium">Raydium</option>
-                            <option value="orca">Orca</option>
-                            <option value="meteora">Meteora</option>
-                            <option value="uniswap">Uniswap</option>
-                            <option value="pancakeswap">PancakeSwap</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button id="analyzePoolBtn" class="analyze-btn">
-                    <span class="btn-text" data-i18n="poolAnalyzer.labels.analyzeBtn">Analyze Pool</span>
-                    <span class="btn-icon">🔍</span>
-                </button>
-
-                <div class="quick-examples">
-                    <span class="examples-label">Quick examples:</span>
-                    <button class="example-btn" data-address="58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2" data-network="solana">
-                        SOL/USDC (Orca)
-                    </button>
-                    <button class="example-btn" data-address="8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj" data-network="solana">
-                        RAY/SOL (Raydium)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Results Display -->
-            <div id="poolAnalysisResults" class="pool-results" style="display: none;">
-                <!-- Header -->
-                <div class="results-header">
-                    <div class="pool-title">
-                        <span class="token-pair"></span>
-                        <span class="dex-badge"></span>
-                    </div>
-                    <div class="analysis-time"></div>
-                </div>
-
-                <!-- Risk Badge -->
-                <div class="risk-badge-container">
-                    <div class="risk-badge">
-                        <span class="risk-icon">🚨</span>
-                        <span class="risk-label">Risk:</span>
-                        <span class="risk-level"></span>
-                    </div>
-                    <div class="risk-reasons"></div>
-                </div>
-
-                <!-- Pool Objectives Section -->
-                <div class="pool-objectives-section">
-                    <h3 class="subsection-title">▶️ <span data-i18n="poolAnalyzer.objectives.title">Pool Objective</span></h3>
-                    <div class="objectives-list" id="poolObjectives">
-                        <!-- Dynamically populated -->
-                    </div>
-                </div>
-
-                <!-- Price Range Chart Section -->
-                <div class="price-chart-section">
-                    <div class="chart-header">
-                        <h3 class="subsection-title">📊
-                            <span data-i18n="poolAnalyzer.chart.title">Range Visualization</span>
-                        </h3>
-                        <div class="current-price-display">
-                            <span class="price-label" data-i18n="poolAnalyzer.chart.currentPrice">Current Price</span>
-                            <span class="price-value" id="currentPriceChart"></span>
-                        </div>
-                    </div>
-
-                    <!-- Range Position Alert (moved above chart) -->
-                    <div class="range-alert" id="rangeAlert" style="display: none;">
-                        <div class="alert-icon"></div>
-                        <div class="alert-message"></div>
-                    </div>
-
-                    <!-- Chart Canvas (reduced height to 300px) -->
-                    <div class="chart-container">
-                        <canvas id="rangeChart"></canvas>
-                    </div>
-
-                    <!-- Compact Range Prices Below Chart -->
-                    <div class="range-prices-compact">
-                        <div class="range-price-item short">
-                            <span class="range-icon">🔴</span>
-                            <span class="range-name" data-i18n="poolAnalyzer.ranges.short">Short</span>:
-                            <span class="range-values">
-                                <span id="shortMinCompact"></span> → <span id="shortMaxCompact"></span>
-                            </span>
-                        </div>
-                        <div class="range-price-item moderate">
-                            <span class="range-icon">🟡</span>
-                            <span class="range-name" data-i18n="poolAnalyzer.ranges.moderate">Moderate</span>:
-                            <span class="range-values">
-                                <span id="moderateMinCompact"></span> → <span id="moderateMaxCompact"></span>
-                            </span>
-                        </div>
-                        <div class="range-price-item long">
-                            <span class="range-icon">🟢</span>
-                            <span class="range-name" data-i18n="poolAnalyzer.ranges.long">Long</span>:
-                            <span class="range-values">
-                                <span id="longMinCompact"></span> → <span id="longMaxCompact"></span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Simplified Price Controls (side by side, smaller) -->
-                    <div class="price-controls">
-                        <div class="price-control-group">
-                            <label data-i18n="poolAnalyzer.chart.minPrice">Min Price</label>
-                            <div class="control-input">
-                                <button class="control-btn minus" data-target="minPrice">-</button>
-                                <input type="number" id="minPrice" class="price-input" step="0.0001" readonly>
-                                <button class="control-btn plus" data-target="minPrice">+</button>
-                            </div>
-                        </div>
-
-                        <div class="price-control-group">
-                            <label data-i18n="poolAnalyzer.chart.maxPrice">Max Price</label>
-                            <div class="control-input">
-                                <button class="control-btn minus" data-target="maxPrice">-</button>
-                                <input type="number" id="maxPrice" class="price-input" step="0.0001" readonly>
-                                <button class="control-btn plus" data-target="maxPrice">+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Simplified Chart Note -->
-                    <div class="chart-note">
-                        <span data-i18n="poolAnalyzer.chart.note">
-                            💡 Colored lines = range limits. Adjust Min/Max to recalculate.
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Key Metrics Grid -->
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-icon">💧</div>
-                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.liquidity">Liquidity</div>
-                        <div class="metric-value" id="liquidityValue"></div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon">⚡</div>
-                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.volume">Volume 24h</div>
-                        <div class="metric-value" id="volumeValue"></div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon">💲</div>
-                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.fee">Fee Tier</div>
-                        <div class="metric-value" id="feeValue"></div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-icon">📈</div>
-                        <div class="metric-label" data-i18n="poolAnalyzer.metrics.priceChange">24h Change</div>
-                        <div class="metric-value" id="priceChangeValue"></div>
-                    </div>
-                </div>
-
-                <!-- APRs Section -->
-                <div class="aprs-section">
-                    <h3 class="subsection-title">📊 <span data-i18n="poolAnalyzer.aprs.title">Estimated APRs</span></h3>
-                    <div class="aprs-grid">
-                        <div class="apr-card">
-                            <div class="apr-period" data-i18n="poolAnalyzer.aprs.daily">Daily</div>
-                            <div class="apr-value" id="dailyAPR"></div>
-                        </div>
-                        <div class="apr-card">
-                            <div class="apr-period" data-i18n="poolAnalyzer.aprs.monthly">Monthly</div>
-                            <div class="apr-value" id="monthlyAPR"></div>
-                        </div>
-                        <div class="apr-card highlighted">
-                            <div class="apr-period" data-i18n="poolAnalyzer.aprs.annual">Annual</div>
-                            <div class="apr-value" id="annualAPR"></div>
-                        </div>
-                    </div>
-                    <div class="apr-disclaimer" data-i18n="poolAnalyzer.aprs.disclaimer">
-                        ⚠️ APRs are estimated based on 24h volume and current liquidity. Actual returns may vary significantly.
-                    </div>
-                </div>
-
-                <!-- Strategic Ranges -->
-                <div class="ranges-section">
-                    <h3 class="subsection-title">🎯 <span data-i18n="poolAnalyzer.ranges.title">Strategic Price Ranges</span></h3>
-
-                    <!-- Educational Tooltip -->
-                    <div class="educational-tooltip">
-                        <div class="tooltip-icon">❓</div>
-                        <div class="tooltip-content">
-                            <strong data-i18n="poolAnalyzer.tooltip.title">O QUE É UM RANGE?</strong>
-                            <p data-i18n="poolAnalyzer.tooltip.content">
-                                Range é a faixa de preço onde sua liquidez trabalha.
-                                Quanto menor o range, mais taxas você ganha, mas precisa ajustar mais vezes.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Short Range Card -->
-                    <div class="range-card-improved short-range">
-                        <div class="range-card-header">
-                            <div class="range-title-row">
-                                <span class="range-emoji">🔴</span>
-                                <span class="range-name">
-                                    <span data-i18n="poolAnalyzer.ranges.short">RANGE CURTO</span>
-                                    <span class="range-percentage">(<span id="shortPercent">±3%</span>)</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="range-prices-large">
-                            <span class="price-min" id="shortMin"></span>
-                            <span class="price-arrow">──→</span>
-                            <span class="price-max" id="shortMax"></span>
-                        </div>
-
-                        <div class="range-indicators">
-                            <span class="efficiency-icons">💰💰💰</span>
-                            <span class="efficiency-label" data-i18n="poolAnalyzer.ranges.shortEfficiency">Máxima eficiência</span>
-                        </div>
-
-                        <div class="range-details">
-                            <div class="detail-item">
-                                <span class="detail-icon">⚡</span>
-                                <span data-i18n="poolAnalyzer.ranges.shortAdjust">Ajustar: Semanalmente</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-icon">👤</span>
-                                <span data-i18n="poolAnalyzer.ranges.shortIdeal">Ideal para: Traders ativos</span>
-                            </div>
-                        </div>
-
-                        <div class="range-summary" id="shortSummary">
-                            <!-- Short bullet point summary -->
-                        </div>
-                    </div>
-
-                    <!-- Moderate Range Card -->
-                    <div class="range-card-improved moderate-range recommended">
-                        <div class="recommended-badge" data-i18n="poolAnalyzer.ranges.recommended">⭐ Recomendado</div>
-                        <div class="range-card-header">
-                            <div class="range-title-row">
-                                <span class="range-emoji">🟡</span>
-                                <span class="range-name">
-                                    <span data-i18n="poolAnalyzer.ranges.moderate">RANGE MODERADO</span>
-                                    <span class="range-percentage">(<span id="moderatePercent">±7%</span>)</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="range-prices-large">
-                            <span class="price-min" id="moderateMin"></span>
-                            <span class="price-arrow">──→</span>
-                            <span class="price-max" id="moderateMax"></span>
-                        </div>
-
-                        <div class="range-indicators">
-                            <span class="efficiency-icons">💰💰</span>
-                            <span class="efficiency-label" data-i18n="poolAnalyzer.ranges.moderateEfficiency">Equilíbrio ideal</span>
-                        </div>
-
-                        <div class="range-details">
-                            <div class="detail-item">
-                                <span class="detail-icon">⚡</span>
-                                <span data-i18n="poolAnalyzer.ranges.moderateAdjust">Ajustar: Mensalmente</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-icon">👤</span>
-                                <span data-i18n="poolAnalyzer.ranges.moderateIdeal">Ideal para: Maioria dos usuários</span>
-                            </div>
-                        </div>
-
-                        <div class="range-summary" id="moderateSummary">
-                            <!-- Moderate bullet point summary -->
-                        </div>
-                    </div>
-
-                    <!-- Long Range Card -->
-                    <div class="range-card-improved long-range">
-                        <div class="range-card-header">
-                            <div class="range-title-row">
-                                <span class="range-emoji">🟢</span>
-                                <span class="range-name">
-                                    <span data-i18n="poolAnalyzer.ranges.long">RANGE LONGO</span>
-                                    <span class="range-percentage">(<span id="longPercent">±18%</span>)</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="range-prices-large">
-                            <span class="price-min" id="longMin"></span>
-                            <span class="price-arrow">──→</span>
-                            <span class="price-max" id="longMax"></span>
-                        </div>
-
-                        <div class="range-indicators">
-                            <span class="efficiency-icons">💰</span>
-                            <span class="efficiency-label" data-i18n="poolAnalyzer.ranges.longEfficiency">Mínimo esforço</span>
-                        </div>
-
-                        <div class="range-details">
-                            <div class="detail-item">
-                                <span class="detail-icon">⚡</span>
-                                <span data-i18n="poolAnalyzer.ranges.longAdjust">Ajustar: Raramente</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-icon">👤</span>
-                                <span data-i18n="poolAnalyzer.ranges.longIdeal">Ideal para: Investidor passivo</span>
-                            </div>
-                        </div>
-
-                        <div class="range-summary" id="longSummary">
-                            <!-- Long bullet point summary -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Compact Important Notice -->
-                <div class="important-notice-compact">
-                    <div class="notice-icon">⚠️</div>
-                    <div class="notice-content">
-                        <strong data-i18n="poolAnalyzer.important.title">Importante:</strong>
-                        <span id="importantNotice"></span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons-group">
-                    <button class="btn-primary" id="copyAnalysisBtn">
-                        <span data-i18n="poolAnalyzer.actions.copy">📋 Copiar Análise</span>
-                    </button>
-                    <button class="btn-secondary" id="viewOnDexBtn">
-                        <span data-i18n="poolAnalyzer.actions.goToPool">🔗 Ir para Pool</span>
-                    </button>
-                    <button class="btn-tertiary" id="newAnalysisBtn">
-                        <span data-i18n="poolAnalyzer.actions.newAnalysis">🔄 Nova Análise</span>
-                    </button>
-                </div>
-            </div>
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title"><span data-i18n="how.title1">Como</span> <span class="grad" data-i18n="how.title2">funciona</span></h2>
+          <p class="section-sub" data-i18n="how.sub">Sem números inventados: estas são as regras exatas usadas no radar.</p>
         </div>
+        <div class="how-grid">
+          <article class="card how-card">
+            <h3>🔥 <span data-i18n="how.hotTitle">Pools Quentes</span></h3>
+            <ul>
+              <li data-i18n="how.hot1">Volume de 24h maior que a liquidez (giro ≥ 1x)</li>
+              <li data-i18n="how.hot2">Volume de hoje ≥ 1,5x a média diária dos últimos 7 dias</li>
+              <li data-i18n="how.hot3">Ordenadas pelo APR de 24h</li>
+              <li data-i18n="how.hot4">Risco alto: use range curto e acompanhe de perto</li>
+            </ul>
+          </article>
+          <article class="card how-card">
+            <h3>⚖️ <span data-i18n="how.modTitle">Pools Moderadas</span></h3>
+            <ul>
+              <li data-i18n="how.mod1">Liquidez acima de $1M e pool com mais de 30 dias</li>
+              <li data-i18n="how.mod2">Giro entre 0,1x e 1x por dia</li>
+              <li data-i18n="how.mod3">APR de 24h no máximo 40% diferente do APR de 7 dias (rendimento estável)</li>
+              <li data-i18n="how.mod4">Par com SOL, stablecoin ou SOL em staking</li>
+            </ul>
+          </article>
+          <article class="card how-card">
+            <h3>🎯 <span data-i18n="how.rangeTitle">O que é um range?</span></h3>
+            <p data-i18n="how.range1">Em pools concentradas (CLMM/DLMM), você escolhe a faixa de preço onde sua liquidez trabalha. Só ganha taxas enquanto o preço estiver dentro dela.</p>
+            <p data-i18n="how.range2">Range estreito = mais taxas, mas sai da faixa mais rápido. Range largo = menos taxas, mais tranquilidade.</p>
+          </article>
+          <article class="card how-card">
+            <h3>📐 <span data-i18n="how.aprTitle">Como o APR é calculado</span></h3>
+            <p data-i18n="how.apr1">APR = taxas geradas no dia ÷ liquidez total × 365. Usamos a taxa real informada pela DEX sempre que disponível.</p>
+            <p data-i18n="how.apr2">É uma estimativa: em pools concentradas, o retorno real depende do seu range e de quanto tempo o preço fica nele. Não inclui perda impermanente.</p>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <!-- Backtesting Section -->
-    <section class="backtesting" id="backtesting">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="title-icon">📈</span>
-                    <span data-i18n="backtest.title">Backtesting Simulator</span>
-                </h2>
-                <p class="section-subtitle" data-i18n="backtest.subtitle">Test strategies with real historical data</p>
-            </div>
-
-            <div class="backtest-container">
-                <!-- Configuration Panel -->
-                <div class="backtest-form">
-                    <h3 data-i18n="backtest.configuration">Configuration</h3>
-
-                    <div class="form-group">
-                        <label data-i18n="backtest.pair">Trading Pair</label>
-                        <select class="form-control" id="backtestPair">
-                            <option value="BTC/USDT">BTC/USDT</option>
-                            <option value="ETH/USDT">ETH/USDT</option>
-                            <option value="SOL/USDT">SOL/USDT</option>
-                            <option value="BNB/USDT">BNB/USDT</option>
-                            <option value="XRP/USDT">XRP/USDT</option>
-                            <option value="ADA/USDT">ADA/USDT</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="backtest.period">Time Period</label>
-                        <select class="form-control" id="backtestPeriod">
-                            <option value="7">Last 7 days</option>
-                            <option value="14">Last 14 days</option>
-                            <option value="30" selected>Last 30 days</option>
-                            <option value="60">Last 60 days</option>
-                            <option value="90">Last 90 days</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="backtest.capital">Initial Capital (USD)</label>
-                        <input type="number" class="form-control" id="backtestCapital" value="1000" min="100" max="100000" step="100">
-                        <small class="form-hint">Min: $100 | Max: $100,000</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label data-i18n="backtest.strategy">Strategy</label>
-                        <select class="form-control" id="backtestStrategy">
-                            <option value="all-signals">All Signals - Follow all BUY/STRONG BUY</option>
-                            <option value="strong-buy-only">Only STRONG BUY - Score &gt; 80</option>
-                            <option value="aggressive">Aggressive - Trade all except SELL</option>
-                            <option value="conservative">Conservative - STRONG BUY + exit on HOLD</option>
-                        </select>
-                    </div>
-
-                    <button class="btn btn-primary full-width" id="simulateBtn" data-i18n="backtest.simulate">
-                        <span class="btn-text">Simulate Backtest</span>
-                        <span class="btn-spinner" style="display: none;">⏳</span>
-                    </button>
-                </div>
-
-                <!-- Results Panel -->
-                <div class="backtest-results" id="backtestResults">
-                    <!-- Loading State -->
-                    <div class="backtest-loading" id="backtestLoading" style="display: none;">
-                        <div class="spinner"></div>
-                        <p class="loading-message">Analyzing historical data...</p>
-                        <p class="loading-step" id="loadingStep">Initializing...</p>
-                    </div>
-
-                    <!-- Empty State -->
-                    <div class="backtest-empty" id="backtestEmpty">
-                        <div class="empty-icon">📊</div>
-                        <h3>Ready to Backtest</h3>
-                        <p>Configure your parameters and click "Simulate Backtest" to see how the strategy would have performed with historical data.</p>
-                    </div>
-
-                    <!-- Results Content -->
-                    <div class="backtest-content" id="backtestContent" style="display: none;">
-                        <h3 data-i18n="backtest.results">Results</h3>
-
-                        <!-- Stats Grid -->
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-label" data-i18n="backtest.initial">Initial Capital</div>
-                                <div class="stat-value mono" id="statInitial">$0.00</div>
-                            </div>
-
-                            <div class="stat-card highlight">
-                                <div class="stat-label" data-i18n="backtest.final">Final Capital</div>
-                                <div class="stat-value mono" id="statFinal">$0.00</div>
-                            </div>
-
-                            <div class="stat-card highlight">
-                                <div class="stat-label" data-i18n="backtest.profit">Total Profit</div>
-                                <div class="stat-value mono" id="statProfit">$0.00 (0%)</div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-label" data-i18n="backtest.total_trades">Total Trades</div>
-                                <div class="stat-value mono" id="statTrades">0</div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-label" data-i18n="backtest.winrate">Win Rate</div>
-                                <div class="stat-value mono" id="statWinRate">0%</div>
-                                <div class="stat-subtext" id="statWinLoss">0 wins / 0 losses</div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-label" data-i18n="backtest.best">Best Trade</div>
-                                <div class="stat-value mono" id="statBest">$0.00</div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-label" data-i18n="backtest.worst">Worst Trade</div>
-                                <div class="stat-value mono" id="statWorst">$0.00</div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-label" data-i18n="backtest.avgwin">Avg Win</div>
-                                <div class="stat-value mono" id="statAvgWin">$0.00</div>
-                            </div>
-                        </div>
-
-                        <!-- Performance Chart -->
-                        <div class="chart-container">
-                            <h4>Portfolio Performance</h4>
-                            <div class="chart-wrapper">
-                                <canvas id="performanceChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Trade History -->
-                        <div class="trades-history" id="tradesHistory">
-                            <div class="trades-header">
-                                <h4>Trade History</h4>
-                                <span class="trades-count" id="tradesCount">0 trades</span>
-                            </div>
-                            <div class="trades-list" id="tradesList">
-                                <!-- Trade items will be populated here -->
-                            </div>
-                        </div>
-
-                        <!-- Disclaimer -->
-                        <div class="backtest-disclaimer">
-                            <strong>⚠️ Important:</strong> Past performance does not guarantee future results.
-                            This backtesting uses historical data with perfect hindsight and does not account for
-                            slippage, market conditions, or emotional factors in real trading. Use for educational
-                            purposes only.
-                        </div>
-                    </div>
-
-                    <!-- Error State -->
-                    <div class="backtest-error" id="backtestError" style="display: none;">
-                        <div class="error-icon">⚠️</div>
-                        <h3>Error</h3>
-                        <p id="errorMessage">Something went wrong. Please try again.</p>
-                        <button class="btn btn-outline" onclick="document.getElementById('backtestError').style.display='none'; document.getElementById('backtestEmpty').style.display='flex';">Try Again</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- DISCLAIMER -->
+    <section class="container">
+      <div class="disclaimer">
+        <strong>⚠️ <span data-i18n="disc.title">Aviso</span></strong>
+        <p data-i18n="disc.text">Conteúdo educacional. SignalDegen não é consultoria nem recomendação de investimento. Prover liquidez envolve riscos, incluindo perda impermanente e perda total do capital. Faça sua própria pesquisa (DYOR).</p>
+      </div>
     </section>
+  </main>
 
-    <!-- Features Section -->
-    <section class="features" id="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-i18n="features.title">Why SignalDegen?</h2>
-            </div>
+  <footer class="footer">
+    <div class="container footer-row">
+      <span>📡 SignalDegen © 2026</span>
+      <span class="muted" data-i18n="footer.data">Dados: Raydium • Meteora • GeckoTerminal • DexScreener</span>
+    </div>
+  </footer>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title" data-i18n="features.realtime">Real-Time</h3>
-                    <p class="feature-description" data-i18n="features.realtime_desc">
-                        Instant signals updated every second
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3 class="feature-title" data-i18n="features.winrate">78% Win Rate</h3>
-                    <p class="feature-description" data-i18n="features.winrate_desc">
-                        Proven accuracy with historical data
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🔔</div>
-                    <h3 class="feature-title" data-i18n="features.alerts">Push Alerts</h3>
-                    <p class="feature-description" data-i18n="features.alerts_desc">
-                        Get notified instantly on opportunities
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3 class="feature-title" data-i18n="features.backtesting">Backtesting</h3>
-                    <p class="feature-description" data-i18n="features.backtesting_desc">
-                        Test strategies before investing
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3 class="feature-title" data-i18n="features.multiexchange">Multi-Exchange</h3>
-                    <p class="feature-description" data-i18n="features.multiexchange_desc">
-                        Signals from all major exchanges
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3 class="feature-title" data-i18n="features.free">100% Free</h3>
-                    <p class="feature-description" data-i18n="features.free_desc">
-                        No hidden fees, completely free
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Disclaimer Section -->
-    <section class="disclaimer-section">
-        <div class="container">
-            <div class="disclaimer-box">
-                <div class="disclaimer-icon">⚠️</div>
-                <h3 class="disclaimer-title" data-i18n="disclaimer.title">WARNING</h3>
-                <p class="disclaimer-text" data-i18n="disclaimer.text">
-                    SignalDegen provides educational signals. We are NOT financial advisors.
-                    Trading involves significant risk. Never invest more than you can afford to lose.
-                    DYOR (Do Your Own Research). We are not responsible for losses.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <div class="footer-logo">
-                        <span class="logo-icon">📡</span>
-                        <span class="logo-text">SignalDegen</span>
-                    </div>
-                    <p class="footer-description" data-i18n="footer.description">
-                        Smart crypto signals for bold traders. Real-time analysis and high-risk opportunities.
-                    </p>
-                    <p class="footer-copyright">© 2025 SignalDegen. <span data-i18n="footer.rights">All rights reserved.</span></p>
-                </div>
-
-                <div class="footer-col">
-                    <h4 class="footer-heading" data-i18n="footer.navigation">Navigation</h4>
-                    <ul class="footer-links">
-                        <li><a href="#home" data-i18n="nav.home">Home</a></li>
-                        <li><a href="#safe-signals" data-i18n="nav.safe">Safe Signals</a></li>
-                        <li><a href="#degen-zone" data-i18n="nav.degen">Degen Zone</a></li>
-                        <li><a href="#backtesting" data-i18n="nav.backtesting">Backtesting</a></li>
-                        <li><a href="#about" data-i18n="nav.about">About</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4 class="footer-heading" data-i18n="footer.legal">Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" data-i18n="footer.terms">Terms of Service</a></li>
-                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
-                        <li><a href="#" data-i18n="footer.disclaimer">Disclaimer</a></li>
-                        <li><a href="#" data-i18n="footer.risk">Risk Warning</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h4 class="footer-heading" data-i18n="footer.social">Social</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" target="_blank">Twitter</a></li>
-                        <li><a href="#" target="_blank">Telegram</a></li>
-                        <li><a href="#" target="_blank">Discord</a></li>
-                        <li><a href="#" target="_blank">Email</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Chart.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
-
-    <!-- Application Scripts -->
-    <script src="js/api.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/pool-analyzer.js"></script>
-    <script src="js/backtesting.js"></script>
-    <script src="js/chart-config.js"></script>
-    <script src="js/backtest-ui.js"></script>
-    <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
